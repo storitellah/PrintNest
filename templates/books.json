@@ -1,0 +1,185 @@
+[
+  {
+    "id": "childrens-book",
+    "name": "Children’s book",
+    "description": "Square-ish A5 booklet: a big picture on top, a line of text underneath.",
+    "category": "Books",
+    "kind": "book",
+    "paperId": "a4",
+    "orientation": "landscape",
+    "marginsMm": 0,
+    "pageSize": "half",
+    "pageCount": 16,
+    "settings": {
+      "imposition": { "binding": "saddle-stitch", "duplex": "manual-duplex", "signatureSize": 16, "gutterMm": 8 },
+      "marks": { "safeAreaMm": 10 }
+    },
+    "pages": [
+      {
+        "role": "cover",
+        "elements": [
+          { "type": "image", "rect": [0, 0, 148.5, 160], "fit": "fill" },
+          { "type": "text", "rect": [16, 168, 116, 30], "text": "The story title", "font": "serif", "sizePt": 22, "align": "center", "bold": true, "lineHeight": 1.15 }
+        ]
+      },
+      {
+        "elements": [
+          { "type": "image", "rect": [16, 18, 116, 116], "fit": "fill", "cornerRadiusMm": 3 },
+          { "type": "text", "rect": [16, 142, 116, 50], "text": "One sentence of story goes here.", "font": "serif", "sizePt": 13, "align": "center", "lineHeight": 1.5 }
+        ]
+      },
+      { "repeatOf": 1, "count": 13 },
+      { "role": "back-cover", "elements": [{ "type": "text", "rect": [16, 170, 116, 20], "text": "The end", "font": "serif", "sizePt": 14, "align": "center", "italic": true }] }
+    ]
+  },
+  {
+    "id": "small-catalogue",
+    "name": "Small catalogue",
+    "description": "A5 booklet with a picture, a title, and a details block on every page.",
+    "category": "Books",
+    "kind": "book",
+    "paperId": "a4",
+    "orientation": "landscape",
+    "marginsMm": 0,
+    "pageSize": "half",
+    "pageCount": 16,
+    "settings": {
+      "imposition": { "binding": "saddle-stitch", "duplex": "manual-duplex", "signatureSize": 16, "gutterMm": 8 }
+    },
+    "pages": [
+      {
+        "role": "cover",
+        "elements": [
+          { "type": "text", "rect": [18, 60, 112, 40], "text": "Catalogue", "font": "serif", "sizePt": 28, "lineHeight": 1.1 },
+          { "type": "text", "rect": [18, 104, 112, 14], "text": "Season · Year", "font": "sans", "sizePt": 9, "color": "#6B6B6B", "uppercase": true, "letterSpacing": 0.08 }
+        ]
+      },
+      {
+        "elements": [
+          { "type": "image", "rect": [18, 20, 112, 112], "fit": "fit" },
+          { "type": "text", "rect": [18, 140, 112, 12], "text": "Item name", "font": "serif", "sizePt": 12 },
+          { "type": "text", "rect": [18, 154, 112, 30], "text": "Materials, size, price.", "font": "sans", "sizePt": 8, "color": "#6B6B6B", "lineHeight": 1.5 },
+          { "type": "page-number", "rect": [18, 192, 112, 8], "format": "{n}", "sizePt": 7, "align": "center" }
+        ]
+      },
+      { "repeatOf": 1, "count": 13 },
+      { "role": "back-cover", "elements": [{ "type": "text", "rect": [18, 170, 112, 24], "text": "Made at home with PrintNest", "font": "sans", "sizePt": 7, "align": "center", "color": "#6B6B6B" }] }
+    ]
+  },
+  {
+    "id": "recipe-booklet",
+    "name": "Recipe booklet",
+    "description": "A5 booklet: ingredients in a narrow column, method beside it.",
+    "category": "Books",
+    "kind": "booklet",
+    "paperId": "a4",
+    "orientation": "landscape",
+    "marginsMm": 0,
+    "pageSize": "half",
+    "pageCount": 12,
+    "settings": {
+      "imposition": { "binding": "saddle-stitch", "duplex": "manual-duplex", "gutterMm": 7 }
+    },
+    "pages": [
+      {
+        "role": "cover",
+        "elements": [
+          { "type": "text", "rect": [18, 70, 112, 34], "text": "Recipes", "font": "serif", "sizePt": 30, "align": "center" },
+          { "type": "shape", "shape": "line", "rect": [50, 112, 48, 1], "stroke": "#F4A340", "strokeMm": 0.8 }
+        ]
+      },
+      {
+        "elements": [
+          { "type": "text", "rect": [18, 20, 112, 16], "text": "Recipe name", "font": "serif", "sizePt": 15 },
+          { "type": "text", "rect": [18, 40, 112, 8], "text": "Serves 4 · 40 minutes", "font": "sans", "sizePt": 7.5, "color": "#6B6B6B", "uppercase": true, "letterSpacing": 0.06 },
+          { "type": "text", "rect": [18, 56, 36, 130], "text": "Ingredients\n\n• \n• \n• \n• ", "font": "sans", "sizePt": 8, "lineHeight": 1.7 },
+          { "type": "shape", "shape": "line", "rect": [58, 56, 0.4, 130], "stroke": "#D9D5CE", "strokeMm": 0.3 },
+          { "type": "text", "rect": [64, 56, 66, 130], "text": "Method\n\n1. \n2. \n3. ", "font": "serif", "sizePt": 9, "lineHeight": 1.7 },
+          { "type": "page-number", "rect": [18, 192, 112, 8], "format": "{n}", "sizePt": 7, "align": "center" }
+        ]
+      },
+      { "repeatOf": 1, "count": 9 },
+      { "role": "back-cover", "elements": [] }
+    ]
+  },
+  {
+    "id": "personal-journal",
+    "name": "Personal journal",
+    "description": "A5 booklet ruled with faint writing lines and a date field.",
+    "category": "Books",
+    "kind": "booklet",
+    "paperId": "a4",
+    "orientation": "landscape",
+    "marginsMm": 0,
+    "pageSize": "half",
+    "pageCount": 16,
+    "settings": {
+      "imposition": { "binding": "saddle-stitch", "duplex": "manual-duplex", "signatureSize": 16, "gutterMm": 8 },
+      "ink": { "enabled": true, "greyscale": true, "imageDensity": 0.85 }
+    },
+    "pages": [
+      {
+        "role": "cover",
+        "elements": [
+          { "type": "text", "rect": [18, 80, 112, 26], "text": "Journal", "font": "serif", "sizePt": 26, "align": "center", "italic": true },
+          { "type": "shape", "shape": "rect", "rect": [40, 120, 68, 16], "fill": null, "stroke": "#D9D5CE", "strokeMm": 0.3 }
+        ]
+      },
+      {
+        "elements": [
+          { "type": "text", "rect": [18, 16, 60, 10], "text": "Date", "font": "sans", "sizePt": 7.5, "color": "#8C877D", "uppercase": true, "letterSpacing": 0.1 },
+          { "type": "shape", "shape": "line", "rect": [18, 34, 112, 0.4], "stroke": "#E6E2DA", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [18, 44, 112, 0.4], "stroke": "#E6E2DA", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [18, 54, 112, 0.4], "stroke": "#E6E2DA", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [18, 64, 112, 0.4], "stroke": "#E6E2DA", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [18, 74, 112, 0.4], "stroke": "#E6E2DA", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [18, 84, 112, 0.4], "stroke": "#E6E2DA", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [18, 94, 112, 0.4], "stroke": "#E6E2DA", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [18, 104, 112, 0.4], "stroke": "#E6E2DA", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [18, 114, 112, 0.4], "stroke": "#E6E2DA", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [18, 124, 112, 0.4], "stroke": "#E6E2DA", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [18, 134, 112, 0.4], "stroke": "#E6E2DA", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [18, 144, 112, 0.4], "stroke": "#E6E2DA", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [18, 154, 112, 0.4], "stroke": "#E6E2DA", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [18, 164, 112, 0.4], "stroke": "#E6E2DA", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [18, 174, 112, 0.4], "stroke": "#E6E2DA", "strokeMm": 0.25 },
+          { "type": "page-number", "rect": [18, 192, 112, 8], "format": "{n}", "sizePt": 7, "align": "center" }
+        ]
+      },
+      { "repeatOf": 1, "count": 13 },
+      { "role": "back-cover", "elements": [] }
+    ]
+  },
+  {
+    "id": "school-project",
+    "name": "School project",
+    "description": "A4 portrait report: title block, body columns and page numbers.",
+    "category": "Books",
+    "kind": "custom",
+    "paperId": "a4",
+    "orientation": "portrait",
+    "marginsMm": 18,
+    "pageSize": "sheet",
+    "pageCount": 4,
+    "settings": {
+      "imposition": { "binding": "none", "duplex": "manual-duplex", "gutterMm": 6 }
+    },
+    "pages": [
+      {
+        "elements": [
+          { "type": "text", "rect": [18, 40, 174, 30], "text": "Project title", "font": "serif", "sizePt": 28, "lineHeight": 1.15 },
+          { "type": "shape", "shape": "line", "rect": [18, 76, 174, 1], "stroke": "#F4A340", "strokeMm": 0.8 },
+          { "type": "text", "rect": [18, 84, 174, 14], "text": "Your name · Class · Date", "font": "sans", "sizePt": 10, "color": "#6B6B6B" },
+          { "type": "text", "rect": [18, 110, 174, 160], "text": "Introduction\n\nStart writing here.", "font": "serif", "sizePt": 11, "lineHeight": 1.6 }
+        ]
+      },
+      {
+        "elements": [
+          { "type": "text", "rect": [18, 20, 174, 240], "text": "", "font": "serif", "sizePt": 11, "lineHeight": 1.6, "columns": 2, "columnGapMm": 8 },
+          { "type": "page-number", "rect": [18, 275, 174, 8], "format": "Page {n} of {total}", "sizePt": 8, "align": "center" }
+        ]
+      },
+      { "repeatOf": 1, "count": 2 }
+    ]
+  }
+]

@@ -1,0 +1,180 @@
+[
+  {
+    "id": "mini-zine-8",
+    "name": "Eight-page mini zine",
+    "description": "One sheet of A4, folded three times and cut once. The classic starting point.",
+    "category": "Zines",
+    "kind": "zine",
+    "paperId": "a4",
+    "orientation": "landscape",
+    "marginsMm": 0,
+    "pageSize": "quarter",
+    "pageCount": 8,
+    "settings": {
+      "imposition": { "binding": "mini-zine-8", "duplex": "single-sided", "foldMarks": true },
+      "marks": { "safeAreaMm": 6 }
+    },
+    "pages": [
+      {
+        "role": "cover",
+        "elements": [
+          { "type": "text", "rect": [7, 22, 60, 22], "text": "Your title", "font": "serif", "sizePt": 20, "align": "center", "lineHeight": 1.15 },
+          { "type": "shape", "shape": "line", "rect": [22, 48, 30, 1], "stroke": "#171717", "strokeMm": 0.3 },
+          { "type": "text", "rect": [7, 52, 60, 10], "text": "by you", "font": "sans", "sizePt": 8, "align": "center", "color": "#6B6B6B" }
+        ]
+      },
+      { "elements": [{ "type": "image", "rect": [7, 8, 60, 60], "fit": "fill" }, { "type": "text", "rect": [7, 72, 60, 24], "text": "A short caption goes here.", "font": "serif", "sizePt": 8, "lineHeight": 1.4 }] },
+      { "elements": [{ "type": "text", "rect": [7, 12, 60, 82], "text": "Write here.\n\nA mini zine page holds about eighty words comfortably.", "font": "serif", "sizePt": 8.5, "lineHeight": 1.5 }] },
+      { "elements": [{ "type": "image", "rect": [7, 8, 60, 60], "fit": "fill" }, { "type": "text", "rect": [7, 72, 60, 24], "text": "", "font": "serif", "sizePt": 8, "lineHeight": 1.4 }] },
+      { "elements": [{ "type": "text", "rect": [7, 12, 60, 82], "text": "", "font": "serif", "sizePt": 8.5, "lineHeight": 1.5 }] },
+      { "elements": [{ "type": "image", "rect": [7, 8, 60, 60], "fit": "fill" }, { "type": "text", "rect": [7, 72, 60, 24], "text": "", "font": "serif", "sizePt": 8, "lineHeight": 1.4 }] },
+      { "elements": [{ "type": "text", "rect": [7, 12, 60, 82], "text": "", "font": "serif", "sizePt": 8.5, "lineHeight": 1.5 }] },
+      {
+        "role": "back-cover",
+        "elements": [
+          { "type": "text", "rect": [7, 66, 60, 30], "text": "Printed at home\nwith PrintNest", "font": "sans", "sizePt": 7, "align": "center", "color": "#6B6B6B", "lineHeight": 1.5 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "photography-zine",
+    "name": "Photography zine",
+    "description": "A5 saddle-stitched zine with full-bleed images and small captions.",
+    "category": "Zines",
+    "kind": "zine",
+    "paperId": "a4",
+    "orientation": "landscape",
+    "marginsMm": 0,
+    "pageSize": "half",
+    "pageCount": 8,
+    "settings": {
+      "imposition": { "binding": "saddle-stitch", "duplex": "manual-duplex", "gutterMm": 6, "foldMarks": true },
+      "marks": { "safeAreaMm": 8 }
+    },
+    "pages": [
+      {
+        "role": "cover",
+        "elements": [
+          { "type": "image", "rect": [0, 0, 148.5, 150], "fit": "fill" },
+          { "type": "text", "rect": [14, 160, 120, 26], "text": "Title of the series", "font": "serif", "sizePt": 22, "lineHeight": 1.1 },
+          { "type": "text", "rect": [14, 188, 120, 8], "text": "Photographs by you", "font": "sans", "sizePt": 8, "color": "#6B6B6B" }
+        ]
+      },
+      { "elements": [{ "type": "text", "rect": [16, 24, 116, 120], "text": "An opening note.\n\nA paragraph or two about where these pictures were made, and why.", "font": "serif", "sizePt": 10, "lineHeight": 1.55 }] },
+      { "elements": [{ "type": "image", "rect": [0, 0, 148.5, 210], "fit": "fill" }] },
+      { "elements": [{ "type": "image", "rect": [16, 20, 116, 150], "fit": "fit" }, { "type": "text", "rect": [16, 176, 116, 12], "text": "Caption", "font": "sans", "sizePt": 7.5, "color": "#6B6B6B" }] },
+      { "elements": [{ "type": "image", "rect": [0, 0, 148.5, 210], "fit": "fill" }] },
+      { "elements": [{ "type": "image", "rect": [16, 20, 116, 150], "fit": "fit" }, { "type": "text", "rect": [16, 176, 116, 12], "text": "Caption", "font": "sans", "sizePt": 7.5, "color": "#6B6B6B" }] },
+      { "elements": [{ "type": "text", "rect": [16, 24, 116, 100], "text": "Colophon\n\nPrinted at home.\nEdition of one.", "font": "serif", "sizePt": 9, "lineHeight": 1.6 }] },
+      { "role": "back-cover", "elements": [{ "type": "image", "rect": [0, 0, 148.5, 210], "fit": "fill" }] }
+    ]
+  },
+  {
+    "id": "poetry-zine",
+    "name": "Poetry zine",
+    "description": "A6 booklet with generous margins and one poem per page.",
+    "category": "Zines",
+    "kind": "zine",
+    "paperId": "a5",
+    "orientation": "landscape",
+    "marginsMm": 0,
+    "pageSize": "half",
+    "pageCount": 8,
+    "settings": {
+      "imposition": { "binding": "saddle-stitch", "duplex": "manual-duplex", "gutterMm": 5 },
+      "marks": { "safeAreaMm": 8 }
+    },
+    "pages": [
+      {
+        "role": "cover",
+        "elements": [
+          { "type": "text", "rect": [14, 44, 77, 30], "text": "Poems", "font": "serif", "sizePt": 26, "align": "center", "italic": true },
+          { "type": "shape", "shape": "line", "rect": [38, 80, 29, 1], "stroke": "#171717", "strokeMm": 0.25 }
+        ]
+      },
+      { "elements": [{ "type": "text", "rect": [14, 22, 77, 16], "text": "First poem", "font": "serif", "sizePt": 12, "italic": true }, { "type": "text", "rect": [14, 40, 77, 90], "text": "The lines go here,\nwith the breaks you want,\nand nothing rearranged.", "font": "serif", "sizePt": 9.5, "lineHeight": 1.7 }] },
+      { "elements": [{ "type": "text", "rect": [14, 22, 77, 16], "text": "", "font": "serif", "sizePt": 12, "italic": true }, { "type": "text", "rect": [14, 40, 77, 90], "text": "", "font": "serif", "sizePt": 9.5, "lineHeight": 1.7 }] },
+      { "elements": [{ "type": "text", "rect": [14, 22, 77, 16], "text": "", "font": "serif", "sizePt": 12, "italic": true }, { "type": "text", "rect": [14, 40, 77, 90], "text": "", "font": "serif", "sizePt": 9.5, "lineHeight": 1.7 }] },
+      { "elements": [{ "type": "text", "rect": [14, 22, 77, 16], "text": "", "font": "serif", "sizePt": 12, "italic": true }, { "type": "text", "rect": [14, 40, 77, 90], "text": "", "font": "serif", "sizePt": 9.5, "lineHeight": 1.7 }] },
+      { "elements": [{ "type": "text", "rect": [14, 22, 77, 16], "text": "", "font": "serif", "sizePt": 12, "italic": true }, { "type": "text", "rect": [14, 40, 77, 90], "text": "", "font": "serif", "sizePt": 9.5, "lineHeight": 1.7 }] },
+      { "elements": [{ "type": "text", "rect": [14, 40, 77, 60], "text": "", "font": "serif", "sizePt": 9.5, "lineHeight": 1.7 }] },
+      { "role": "back-cover", "elements": [{ "type": "text", "rect": [14, 118, 77, 20], "text": "Made at home", "font": "sans", "sizePt": 7, "align": "center", "color": "#6B6B6B" }] }
+    ]
+  },
+  {
+    "id": "comic-booklet",
+    "name": "Comic booklet",
+    "description": "A5 booklet pre-drawn with a six-panel grid.",
+    "category": "Zines",
+    "kind": "booklet",
+    "paperId": "a4",
+    "orientation": "landscape",
+    "marginsMm": 0,
+    "pageSize": "half",
+    "pageCount": 8,
+    "settings": {
+      "imposition": { "binding": "saddle-stitch", "duplex": "manual-duplex", "gutterMm": 7 }
+    },
+    "pages": [
+      {
+        "role": "cover",
+        "elements": [
+          { "type": "shape", "shape": "rect", "rect": [14, 16, 120, 120], "fill": null, "stroke": "#171717", "strokeMm": 0.6 },
+          { "type": "text", "rect": [14, 146, 120, 24], "text": "TITLE", "font": "sans", "sizePt": 24, "align": "center", "bold": true, "uppercase": true }
+        ]
+      },
+      {
+        "elements": [
+          { "type": "shape", "shape": "rect", "rect": [14, 16, 58, 56], "fill": null, "stroke": "#171717", "strokeMm": 0.4 },
+          { "type": "shape", "shape": "rect", "rect": [76, 16, 58, 56], "fill": null, "stroke": "#171717", "strokeMm": 0.4 },
+          { "type": "shape", "shape": "rect", "rect": [14, 76, 58, 56], "fill": null, "stroke": "#171717", "strokeMm": 0.4 },
+          { "type": "shape", "shape": "rect", "rect": [76, 76, 58, 56], "fill": null, "stroke": "#171717", "strokeMm": 0.4 },
+          { "type": "shape", "shape": "rect", "rect": [14, 136, 58, 56], "fill": null, "stroke": "#171717", "strokeMm": 0.4 },
+          { "type": "shape", "shape": "rect", "rect": [76, 136, 58, 56], "fill": null, "stroke": "#171717", "strokeMm": 0.4 }
+        ]
+      },
+      { "repeatOf": 1 },
+      { "repeatOf": 1 },
+      { "repeatOf": 1 },
+      { "repeatOf": 1 },
+      { "repeatOf": 1 },
+      { "role": "back-cover", "elements": [{ "type": "text", "rect": [14, 180, 120, 12], "text": "The end", "font": "sans", "sizePt": 10, "align": "center", "uppercase": true }] }
+    ]
+  },
+  {
+    "id": "photo-essay",
+    "name": "Photo essay",
+    "description": "Alternating full-page images and short text, A5 saddle-stitched.",
+    "category": "Zines",
+    "kind": "booklet",
+    "paperId": "a4",
+    "orientation": "landscape",
+    "marginsMm": 0,
+    "pageSize": "half",
+    "pageCount": 12,
+    "settings": {
+      "imposition": { "binding": "saddle-stitch", "duplex": "manual-duplex", "gutterMm": 6 }
+    },
+    "pages": [
+      {
+        "role": "cover",
+        "elements": [
+          { "type": "image", "rect": [0, 0, 148.5, 210], "fit": "fill" },
+          { "type": "text", "rect": [16, 150, 116, 40], "text": "A photo essay", "font": "serif", "sizePt": 24, "color": "#FFFFFF", "lineHeight": 1.1 }
+        ]
+      },
+      { "elements": [{ "type": "text", "rect": [18, 30, 112, 120], "text": "Set the scene in a paragraph.", "font": "serif", "sizePt": 10.5, "lineHeight": 1.6 }] },
+      { "elements": [{ "type": "image", "rect": [0, 0, 148.5, 210], "fit": "fill" }] },
+      { "elements": [{ "type": "text", "rect": [18, 30, 112, 60], "text": "", "font": "serif", "sizePt": 10.5, "lineHeight": 1.6 }] },
+      { "elements": [{ "type": "image", "rect": [0, 0, 148.5, 210], "fit": "fill" }] },
+      { "elements": [{ "type": "text", "rect": [18, 30, 112, 60], "text": "", "font": "serif", "sizePt": 10.5, "lineHeight": 1.6 }] },
+      { "elements": [{ "type": "image", "rect": [0, 0, 148.5, 210], "fit": "fill" }] },
+      { "elements": [{ "type": "text", "rect": [18, 30, 112, 60], "text": "", "font": "serif", "sizePt": 10.5, "lineHeight": 1.6 }] },
+      { "elements": [{ "type": "image", "rect": [0, 0, 148.5, 210], "fit": "fill" }] },
+      { "elements": [{ "type": "text", "rect": [18, 30, 112, 60], "text": "", "font": "serif", "sizePt": 10.5, "lineHeight": 1.6 }] },
+      { "elements": [{ "type": "text", "rect": [18, 30, 112, 80], "text": "Notes and thanks.", "font": "serif", "sizePt": 9, "lineHeight": 1.6 }] },
+      { "role": "back-cover", "elements": [] }
+    ]
+  }
+]

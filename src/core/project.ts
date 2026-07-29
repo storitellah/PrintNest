@@ -667,7 +667,8 @@ function normalizeElement(input: unknown): PageElement | null {
   switch (raw.type) {
     case 'image': {
       const image = raw as Partial<ImageElement>;
-      if (typeof image.assetId !== 'string' || !image.assetId) return null;
+      // An empty assetId is legitimate: it is an unfilled photo frame.
+      if (typeof image.assetId !== 'string') return null;
       return {
         ...createImageElement(image.assetId, rect),
         ...common,

@@ -150,6 +150,17 @@ function renderImage(node: HTMLElement, element: ImageElement, options: RenderPa
   }
   node.style.overflow = 'hidden';
 
+  if (!element.assetId) {
+    // An unfilled template slot. Drawn as a dashed frame on screen and left
+    // empty in print, so an unused slot never prints a box.
+    node.classList.add('pn-el--placeholder');
+    const notice = document.createElement('span');
+    notice.className = 'pn-el__placeholder-label';
+    notice.textContent = 'Drop a picture here';
+    node.append(notice);
+    return;
+  }
+
   if (!asset) {
     node.classList.add('pn-el--missing');
     const notice = document.createElement('span');

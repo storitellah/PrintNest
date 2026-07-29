@@ -55,6 +55,10 @@ interface ElementBase extends Rect {
 
 export interface ImageElement extends ElementBase {
   type: 'image';
+  /**
+   * Empty string means an unfilled photo frame — templates use these as
+   * "drop a picture here" slots, and the editor fills them on drop.
+   */
   assetId: string;
   fit: ImageFit;
   /** Only meaningful when `fit === 'custom'`; 1 = 100 %. */

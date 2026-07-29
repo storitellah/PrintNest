@@ -107,13 +107,29 @@ function checkContent(project: Project, issues: CheckIssue[]): void {
     return;
   }
 
-  const missing = new Set(project.assets.map((asset) => asset.id));
+  const known = new Set(project.assets.map((asset) => asset.id));
   const broken: number[] = [];
+  const empty: number[] = [];
   project.pages.forEach((page, index) => {
     for (const element of page.elements) {
-      if (element.type === 'image' && !missing.has(element.assetId)) broken.push(index);
+      if (element.type !== 'image') continue;
+      if (!element.assetId) empty.push(index);
+      else if (!known.has(element.assetId)) broken.push(index);
     }
   });
+
+  if (empty.length > 0) {
+    issues.push({
+      id: 'empty-frames',
+      severity: 'review',
+      title: `${empty.length} photo frame${empty.length === 1 ? ' is' : 's are'} still empty`,
+      detail:
+        'Empty template frames print as blank space. Drop a picture into each one, or delete the frames you do not need.',
+      pageIndex: empty[0],
+      fix: { label: 'Go to the page', action: { kind: 'select-page', pageIndex: empty[0]! } },
+    });
+  }
+
   if (broken.length > 0) {
     issues.push({
       id: 'missing-assets',
