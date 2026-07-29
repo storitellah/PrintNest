@@ -19,8 +19,9 @@ reasoning behind the configuration files.
    | Build output directory | `dist` |
    | Root directory | *(leave blank)* |
 
-4. Under **Environment variables**, add `NODE_VERSION` = `20` (or newer).
-   Cloudflare's default is older than PrintNest's build tooling supports.
+4. Under **Environment variables**, add `NODE_VERSION` = `22` (or newer).
+   Cloudflare's default is older than PrintNest's build tooling supports, and
+   the test suite's jsdom needs at least 22.
 5. **Save and Deploy.**
 
 The first build takes a couple of minutes. Every push to the default branch

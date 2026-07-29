@@ -73,7 +73,7 @@ npm run icons      # regenerate the PWA icons in public/icons
 npm run audit      # npm audit for production dependencies
 ```
 
-Requires Node 20 or newer.
+Requires Node 22 or newer — jsdom, which the test suite runs in, needs it.
 
 ## Deploying to Cloudflare Pages
 

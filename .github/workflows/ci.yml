@@ -22,9 +22,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Node 22 is the floor, not a preference: jsdom's bundled undici calls
+      # `webidl.util.markAsUncloneable`, which does not exist before Node 22.
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       # `npm ci` installs exactly what the lock file says, which is the point
@@ -61,7 +63,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
       # Advisory: a new advisory against a transitive dependency should not

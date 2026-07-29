@@ -37,6 +37,8 @@ of the finished page.
 
 ## Working on the code
 
+Node 22 or newer is required — jsdom, which the tests run in, needs it.
+
 ```bash
 npm install
 npm run dev
