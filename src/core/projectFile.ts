@@ -163,11 +163,30 @@ export async function importProjectFile(file: File): Promise<ImportResult> {
  * ------------------------------------------------------------------ */
 
 /**
+ * Read a blob's bytes.
+ *
+ * `Blob.arrayBuffer()` is the direct route but is missing on Safari before 14
+ * — still a real iPad in a classroom — so fall back to `FileReader`, which has
+ * been available forever.
+ */
+export async function blobBytes(blob: Blob): Promise<Uint8Array> {
+  if (typeof blob.arrayBuffer === 'function') {
+    return new Uint8Array(await blob.arrayBuffer());
+  }
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(new Uint8Array(reader.result as ArrayBuffer));
+    reader.onerror = () => reject(reader.error ?? new Error('The file could not be read.'));
+    reader.readAsArrayBuffer(blob);
+  });
+}
+
+/**
  * Encode a blob as base64 without blowing the call stack on large files —
  * `String.fromCharCode(...bytes)` throws for anything over a few hundred KB.
  */
 export async function blobToBase64(blob: Blob): Promise<string> {
-  const buffer = new Uint8Array(await blob.arrayBuffer());
+  const buffer = await blobBytes(blob);
   const CHUNK = 0x8000;
   let binary = '';
   for (let offset = 0; offset < buffer.length; offset += CHUNK) {

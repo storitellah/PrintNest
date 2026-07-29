@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { runChecks, applyFix, summariseFinishing } from '../src/core/checker.ts';
+import { DEMO_PROJECTS } from '../src/core/demoProjects.ts';
+import { imposeProject } from '../src/core/imposition.ts';
 import { buildContactSheetPages } from '../src/core/contactSheet.ts';
 import { estimateInk, inkFilter, inkHeavyPages, inkSavingFactor, pageCoverage } from '../src/core/ink.ts';
 import { autoPlaceImages, detectMissingPages, groupByOrientation, suggestGrid } from '../src/core/layoutAssistant.ts';
@@ -177,6 +179,90 @@ describe('templates', () => {
   it('stops cleanly when there are more frames than pictures', () => {
     const project = projectFromTemplate(getTemplate('photography-zine')!);
     expect(fillEmptyFrames(project, ['only-one'])).toBe(1);
+  });
+});
+
+describe('sheet margins versus page margins', () => {
+  it('places a full-page document on its sheet at true size', () => {
+    // Regression: page margins were once applied a second time at imposition,
+    // shrinking every ordinary one-page-per-sheet document by its own margin.
+    const project = createProject({ kind: 'quick' });
+    project.margins = uniformMargins(10);
+
+    const result = imposeProject(project);
+    const slot = result.sheets[0]!.slots[0]!;
+
+    expect(slot.rect.widthMm).toBeCloseTo(210, 4);
+    expect(slot.rect.heightMm).toBeCloseTo(297, 4);
+    expect(slot.rect.xMm).toBeCloseTo(0, 4);
+    expect(slot.rect.yMm).toBeCloseTo(0, 4);
+  });
+
+  it('honours a sheet margin when one is set', () => {
+    const project = createProject({ kind: 'quick' });
+    project.pageWidthMm = 190;
+    project.pageHeightMm = 277;
+    project.settings.imposition.sheetMarginMm = 10;
+
+    const slot = imposeProject(project).sheets[0]!.slots[0]!;
+    expect(slot.rect.xMm).toBeCloseTo(10, 4);
+    expect(slot.rect.yMm).toBeCloseTo(10, 4);
+    expect(slot.rect.widthMm).toBeCloseTo(190, 4);
+  });
+
+  it('keeps a label sheet’s grid inside its sheet margin', () => {
+    const project = createProject({ kind: 'labels' });
+    const result = imposeProject(project);
+    const first = result.sheets[0]!.slots[0]!.rect;
+    const last = result.sheets[0]!.slots[result.sheets[0]!.slots.length - 1]!.rect;
+
+    expect(first.xMm).toBeGreaterThanOrEqual(10 - 0.01);
+    expect(first.yMm).toBeGreaterThanOrEqual(10 - 0.01);
+    expect(last.xMm + last.widthMm).toBeLessThanOrEqual(200.01);
+    expect(last.yMm + last.heightMm).toBeLessThanOrEqual(287.01);
+  });
+
+  it('fills the sheet with two pages for a booklet, edge to edge', () => {
+    const project = createProject({ kind: 'booklet', pageCount: 8 });
+    project.settings.imposition.gutterMm = 0;
+    const slots = imposeProject(project).sheets[0]!.slots;
+    expect(slots[0]!.rect.xMm).toBeCloseTo(0, 4);
+    expect(slots[1]!.rect.xMm + slots[1]!.rect.widthMm).toBeCloseTo(297, 4);
+  });
+});
+
+describe('sample projects', () => {
+  it('every sample passes its own pre-flight check', () => {
+    for (const demo of DEMO_PROJECTS) {
+      const report = runChecks({ project: demo.build(), profile: null });
+      // A demo that trips its own checker teaches the wrong lesson.
+      expect(
+        report.issues.map((issue) => `${demo.id}: ${issue.title}`),
+      ).toEqual([]);
+    }
+  });
+
+  it('builds each sample with real content', () => {
+    for (const demo of DEMO_PROJECTS) {
+      const project = demo.build();
+      expect(project.pages.length).toBeGreaterThan(0);
+      expect(project.pages.some((page) => page.elements.length > 0)).toBe(true);
+      expect(demo.teaches.length).toBeGreaterThan(20);
+    }
+  });
+
+  it('imposes the sample mini zine onto exactly one sheet', () => {
+    const zine = DEMO_PROJECTS.find((demo) => demo.id === 'demo-mini-zine')!.build();
+    const result = imposeProject(zine);
+    expect(result.sheets).toHaveLength(1);
+    expect(result.sheets[0]!.slots).toHaveLength(8);
+  });
+
+  it('imposes the sample booklet onto three double-sided sheets', () => {
+    const booklet = DEMO_PROJECTS.find((demo) => demo.id === 'demo-booklet')!.build();
+    const result = imposeProject(booklet);
+    expect(result.sheets).toHaveLength(6); // 3 sheets × 2 sides
+    expect(result.addedBlanks).toBe(0);
   });
 });
 

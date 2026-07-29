@@ -1,4 +1,6 @@
 import { deleteProject, listProjects, loadProject, saveProject } from '../../core/db.ts';
+import { DEMO_PROJECTS } from '../../core/demoProjects.ts';
+import type { DemoProject } from '../../core/demoProjects.ts';
 import { ACCEPT_ATTRIBUTE } from '../../core/files.ts';
 import { KIND_PRESETS, createProject, duplicateProject } from '../../core/project.ts';
 import type { KindPreset } from '../../core/project.ts';
@@ -52,6 +54,8 @@ export function createHomeScreen(onOpenProject: () => void): HomeScreen {
       kindGrid(),
       heading('Templates', 'Editable starting points — change anything you like.'),
       templateStrip(),
+      heading('Sample projects', 'Complete projects you can print, fold and take apart.'),
+      demoStrip(),
       heading(
         recents.length > 0 ? 'Recent projects' : 'Your projects',
         'Stored on this device only. Nothing is uploaded.',
@@ -141,6 +145,32 @@ export function createHomeScreen(onOpenProject: () => void): HomeScreen {
           onclick: () => openTemplateDialog(onOpenProject),
         },
         `See all ${listTemplates().length} templates`,
+      ),
+    );
+  }
+
+  function demoStrip(): HTMLElement {
+    return el(
+      'div',
+      { class: 'pn-recent-grid' },
+      ...DEMO_PROJECTS.map((demo) =>
+        el(
+          'button',
+          {
+            type: 'button',
+            class: 'pn-kind',
+            style: { minHeight: 'auto' },
+            onclick: () => void openDemo(demo, onOpenProject),
+          },
+          icon('sparkle', { size: 24, class: 'pn-kind__icon' }),
+          el('span', { class: 'pn-kind__title', text: demo.name }),
+          el('span', { class: 'pn-kind__blurb', text: demo.description }),
+          el('span', {
+            class: 'pn-kind__blurb',
+            style: { color: 'var(--pn-blue)' },
+            text: demo.teaches,
+          }),
+        ),
       ),
     );
   }
@@ -268,6 +298,18 @@ async function startProject(preset: KindPreset, onOpen: () => void): Promise<voi
     }
   } catch (error) {
     toastError(error, 'The project could not be created.');
+  }
+}
+
+async function openDemo(demo: DemoProject, onOpen: () => void): Promise<void> {
+  try {
+    const project = demo.build();
+    await store.open(project);
+    await store.save();
+    onOpen();
+    toast({ title: `${demo.name} opened`, detail: demo.teaches, kind: 'success', duration: 8000 });
+  } catch (error) {
+    toastError(error, 'The sample project could not be opened.');
   }
 }
 

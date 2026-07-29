@@ -7,6 +7,7 @@ export default defineConfig({
     // environment keeps the suite simple to run.
     environment: 'jsdom',
     include: ['tests/**/*.test.ts'],
+    setupFiles: ['tests/setup.ts'],
     restoreMocks: true,
   },
 });

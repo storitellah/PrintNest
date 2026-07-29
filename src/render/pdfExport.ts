@@ -22,6 +22,7 @@ import type {
 } from '../core/types.ts';
 import { PT_PER_INCH, mmToPt } from '../core/units.ts';
 import { canvasToBlob, createCanvas } from '../core/assets.ts';
+import { blobBytes } from '../core/projectFile.ts';
 import type { DecodedImage } from './canvasRender.ts';
 import { decodeProjectImages, rasterizeImageElement, releaseImages } from './canvasRender.ts';
 import { alignOffset, wrapText } from './textLayout.ts';
@@ -77,7 +78,9 @@ export interface PdfFonts {
 export async function exportPdf(options: PdfExportOptions): Promise<Blob> {
   const { project } = options;
   const dpi = options.dpi ?? 300;
-  const doc = await PDFDocument.create();
+  // `updateMetadata: false` stops pdf-lib overwriting the producer and
+  // modification date at save time, so the file is correctly attributed.
+  const doc = await PDFDocument.create({ updateMetadata: false });
 
   doc.setTitle(project.name || 'PrintNest project');
   doc.setProducer('PrintNest by Storitellah');
@@ -325,7 +328,7 @@ async function drawPdfImage(
   if (!entry) {
     const raster = await rasterizeImageElement(element, asset, decoded, project, dpi);
     if (!raster) return;
-    const bytes = new Uint8Array(await raster.blob.arrayBuffer());
+    const bytes = await blobBytes(raster.blob);
     const ref =
       raster.blob.type === 'image/png' ? await doc.embedPng(bytes) : await doc.embedJpg(bytes);
     entry = { ref };
@@ -556,7 +559,7 @@ async function writePosterPages(
       // Crop the poster down to this tile's slice at export resolution.
       const raster = await rasterizePosterTile(decoded, plan, tile, dpi);
       if (raster) {
-        const bytes = new Uint8Array(await raster.arrayBuffer());
+        const bytes = await blobBytes(raster);
         const ref =
           raster.type === 'image/png' ? await doc.embedPng(bytes) : await doc.embedJpg(bytes);
         pdfPage.drawImage(ref, {
@@ -635,19 +638,32 @@ async function rasterizePosterTile(
  * Helpers
  * ------------------------------------------------------------------ */
 
+/**
+ * Convert a CSS colour to pdf-lib's 0–1 triple.
+ *
+ * Colours reaching here have been through `safeColor`, but this is also called
+ * on template and imported data, so an unparseable value must fall back rather
+ * than hand `NaN` to pdf-lib — which throws and would fail the whole export.
+ */
 export function hexToRgb(color: string) {
-  const hex = color.trim().replace('#', '');
+  const text = color.trim();
+  const hex = text.replace(/^#/, '');
   const expand = (value: string): number => Number.parseInt(value, 16) / 255;
-  if (hex.length === 3) {
+
+  if (/^[0-9a-f]{3,4}$/i.test(hex)) {
     return rgb(expand(hex[0]! + hex[0]!), expand(hex[1]! + hex[1]!), expand(hex[2]! + hex[2]!));
   }
-  if (hex.length >= 6) {
+  if (/^[0-9a-f]{6,8}$/i.test(hex)) {
     return rgb(expand(hex.slice(0, 2)), expand(hex.slice(2, 4)), expand(hex.slice(4, 6)));
   }
-  const match = /rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i.exec(color);
+
+  const match = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i.exec(text);
   if (match) {
-    return rgb(Number(match[1]) / 255, Number(match[2]) / 255, Number(match[3]) / 255);
+    const channel = (value: string): number => Math.min(1, Math.max(0, Number(value) / 255));
+    return rgb(channel(match[1]!), channel(match[2]!), channel(match[3]!));
   }
+
+  if (text.toLowerCase() === 'white') return rgb(1, 1, 1);
   return rgb(0.09, 0.09, 0.09);
 }
 

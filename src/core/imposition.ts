@@ -1,5 +1,5 @@
 import type { Margins, Orientation, Sheet } from './paper.ts';
-import { contentBox, resolveSheet } from './paper.ts';
+import { contentBox, resolveSheet, uniformMargins } from './paper.ts';
 import type { BindingStyle, FlipMotion, Project, Rect } from './types.ts';
 
 /**
@@ -88,6 +88,11 @@ export interface ImposeOptions {
   pageCount: number;
   sheetSize: Sheet;
   pageSize: Sheet;
+  /**
+   * Empty border around the sheet. These are *sheet* margins, not the page's
+   * own margins — applying the latter here would shrink every page by its own
+   * margin a second time.
+   */
   margins: Margins;
   binding: BindingStyle;
   signatureSize: number;
@@ -762,7 +767,9 @@ export function imposeProject(project: Project): ImpositionResult {
     pageCount: project.pages.length,
     sheetSize,
     pageSize: { widthMm: project.pageWidthMm, heightMm: project.pageHeightMm },
-    margins: project.margins,
+    // Sheet margins, deliberately not `project.margins`: those live inside the
+    // page and have already been honoured when its elements were laid out.
+    margins: uniformMargins(imposition.sheetMarginMm),
     binding: imposition.binding,
     signatureSize: imposition.signatureSize,
     duplex: imposition.duplex,

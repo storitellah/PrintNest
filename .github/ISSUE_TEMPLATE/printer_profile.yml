@@ -1,0 +1,84 @@
+name: Printer profile
+description: Share measurements for a printer, so PrintNest can advise better
+labels: ["printer-profile"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is one of the most useful things you can contribute. PrintNest
+        cannot ask a printer what it can do, so every profile comes from
+        somebody measuring theirs.
+
+        Run the calibration page first: **Printer setup → Calibration**. It
+        prints rulers along the top and left edge that show exactly where your
+        printer starts printing.
+
+  - type: input
+    id: model
+    attributes:
+      label: Brand and exact model
+      placeholder: Epson EcoTank ET-2850
+    validations:
+      required: true
+
+  - type: dropdown
+    id: technology
+    attributes:
+      label: Technology
+      options: [Inkjet, Ink tank, Laser, Dye sublimation, Thermal]
+    validations:
+      required: true
+
+  - type: input
+    id: margins
+    attributes:
+      label: Minimum margins measured, in millimetres
+      description: From the rulers on the calibration page — top, right, bottom, left.
+      placeholder: 3, 3, 5, 3
+    validations:
+      required: true
+
+  - type: input
+    id: borderless
+    attributes:
+      label: Paper sizes it prints borderless
+      description: The blue band on the calibration page reaches the paper edge when borderless is working. Write "none" if it has no borderless mode.
+      placeholder: A4, 4x6, 5x7
+    validations:
+      required: true
+
+  - type: dropdown
+    id: auto-duplex
+    attributes:
+      label: Does it have automatic duplex?
+      options: [Yes, No]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: flip
+    attributes:
+      label: For manual duplex, which way does the stack have to be turned over?
+      description: From the one-sheet test in the manual duplex assistant.
+      options:
+        - Left to right, like a book page
+        - Top to bottom, like a calendar
+        - Not tested
+
+  - type: dropdown
+    id: face
+    attributes:
+      label: Do pages come out printed side up or down?
+      options: [Printed side up, Printed side down, Not sure]
+
+  - type: input
+    id: scale
+    attributes:
+      label: What did the 100 mm calibration line measure?
+      placeholder: 100 mm
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else worth knowing
+      placeholder: Rear feed needed for anything over 160 gsm. Bottom margin is larger on plain paper than on photo paper.

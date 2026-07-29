@@ -1,0 +1,68 @@
+name: Bug report
+description: Something in PrintNest does not work as it should
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. If the problem is with what came *out of
+        the printer*, the "Printing problem" template asks better questions.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you do, and what did PrintNest do?
+      placeholder: I dropped in twelve photographs and the page list only showed eleven.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      value: |
+        1.
+        2.
+        3.
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      placeholder: Chrome 141 on Windows 11
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: Device
+      options:
+        - Desktop or laptop
+        - Tablet
+        - Phone
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Anything in the browser console
+      description: Optional, but very helpful. Open developer tools and look at the Console tab.
+      render: text
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Before you attach anything
+      options:
+        - label: I understand that anything I attach here is public, and I have not attached work I want to keep private.
+          required: true

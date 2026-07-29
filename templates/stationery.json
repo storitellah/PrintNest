@@ -11,20 +11,90 @@
     "pageSize": "half",
     "pageCount": 4,
     "settings": {
-      "imposition": { "binding": "saddle-stitch", "duplex": "manual-duplex", "gutterMm": 0, "foldMarks": true },
-      "nUp": { "columns": 1, "rows": 1, "gapMm": 0, "cutMarks": false }
+      "imposition": {
+        "binding": "saddle-stitch",
+        "duplex": "manual-duplex",
+        "gutterMm": 0,
+        "foldMarks": true
+      },
+      "nUp": {
+        "columns": 1,
+        "rows": 1,
+        "gapMm": 0,
+        "cutMarks": false
+      }
     },
     "pages": [
       {
         "role": "cover",
         "elements": [
-          { "type": "image", "rect": [14, 20, 120, 120], "fit": "fill", "cornerRadiusMm": 2 },
-          { "type": "text", "rect": [14, 152, 120, 30], "text": "Happy something", "font": "serif", "sizePt": 20, "align": "center", "lineHeight": 1.2 }
+          {
+            "type": "image",
+            "rect": [
+              14,
+              20,
+              120,
+              120
+            ],
+            "fit": "fill",
+            "cornerRadiusMm": 2
+          },
+          {
+            "type": "text",
+            "rect": [
+              14,
+              152,
+              120,
+              30
+            ],
+            "text": "Happy something",
+            "font": "serif",
+            "sizePt": 20,
+            "align": "center",
+            "lineHeight": 1.2
+          }
         ]
       },
-      { "elements": [] },
-      { "elements": [{ "type": "text", "rect": [20, 60, 108, 90], "text": "Write your message here.", "font": "serif", "sizePt": 12, "align": "center", "lineHeight": 1.7 }] },
-      { "role": "back-cover", "elements": [{ "type": "text", "rect": [14, 186, 120, 10], "text": "Made at home", "font": "sans", "sizePt": 6.5, "align": "center", "color": "#8C877D" }] }
+      {
+        "elements": []
+      },
+      {
+        "elements": [
+          {
+            "type": "text",
+            "rect": [
+              20,
+              60,
+              108,
+              90
+            ],
+            "text": "Write your message here.",
+            "font": "serif",
+            "sizePt": 12,
+            "align": "center",
+            "lineHeight": 1.7
+          }
+        ]
+      },
+      {
+        "role": "back-cover",
+        "elements": [
+          {
+            "type": "text",
+            "rect": [
+              14,
+              186,
+              120,
+              10
+            ],
+            "text": "Made at home",
+            "font": "sans",
+            "sizePt": 6.5,
+            "align": "center",
+            "color": "#8C877D"
+          }
+        ]
+      }
     ]
   },
   {
@@ -36,24 +106,131 @@
     "paperId": "a4",
     "orientation": "portrait",
     "marginsMm": 0,
-    "pageSize": { "widthMm": 105, "heightMm": 148 },
+    "pageSize": {
+      "widthMm": 105,
+      "heightMm": 148
+    },
     "pageCount": 2,
     "settings": {
-      "imposition": { "binding": "none", "duplex": "manual-duplex" },
-      "nUp": { "columns": 2, "rows": 2, "gapMm": 0, "cutMarks": true },
-      "marks": { "cropMarks": false, "safeAreaMm": 5 }
+      "imposition": {
+        "binding": "none",
+        "duplex": "manual-duplex",
+        "sheetMarginMm": 0
+      },
+      "nUp": {
+        "columns": 2,
+        "rows": 2,
+        "gapMm": 0,
+        "cutMarks": true
+      },
+      "marks": {
+        "cropMarks": false,
+        "safeAreaMm": 5
+      }
     },
     "pages": [
-      { "elements": [{ "type": "image", "rect": [0, 0, 105, 148], "fit": "fill" }] },
       {
         "elements": [
-          { "type": "shape", "shape": "line", "rect": [52.5, 16, 0.4, 116], "stroke": "#D9D5CE", "strokeMm": 0.3 },
-          { "type": "text", "rect": [8, 16, 40, 60], "text": "", "font": "serif", "sizePt": 8, "lineHeight": 1.6 },
-          { "type": "shape", "shape": "rect", "rect": [82, 12, 16, 18], "fill": null, "stroke": "#D9D5CE", "strokeMm": 0.3 },
-          { "type": "shape", "shape": "line", "rect": [60, 60, 36, 0.4], "stroke": "#D9D5CE", "strokeMm": 0.25 },
-          { "type": "shape", "shape": "line", "rect": [60, 74, 36, 0.4], "stroke": "#D9D5CE", "strokeMm": 0.25 },
-          { "type": "shape", "shape": "line", "rect": [60, 88, 36, 0.4], "stroke": "#D9D5CE", "strokeMm": 0.25 },
-          { "type": "shape", "shape": "line", "rect": [60, 102, 36, 0.4], "stroke": "#D9D5CE", "strokeMm": 0.25 }
+          {
+            "type": "image",
+            "rect": [
+              0,
+              0,
+              105,
+              148
+            ],
+            "fit": "fill"
+          }
+        ]
+      },
+      {
+        "elements": [
+          {
+            "type": "shape",
+            "shape": "line",
+            "rect": [
+              52.5,
+              16,
+              0.4,
+              116
+            ],
+            "stroke": "#D9D5CE",
+            "strokeMm": 0.3
+          },
+          {
+            "type": "text",
+            "rect": [
+              8,
+              16,
+              40,
+              60
+            ],
+            "text": "",
+            "font": "serif",
+            "sizePt": 8,
+            "lineHeight": 1.6
+          },
+          {
+            "type": "shape",
+            "shape": "rect",
+            "rect": [
+              82,
+              12,
+              16,
+              18
+            ],
+            "fill": null,
+            "stroke": "#D9D5CE",
+            "strokeMm": 0.3
+          },
+          {
+            "type": "shape",
+            "shape": "line",
+            "rect": [
+              60,
+              60,
+              36,
+              0.4
+            ],
+            "stroke": "#D9D5CE",
+            "strokeMm": 0.25
+          },
+          {
+            "type": "shape",
+            "shape": "line",
+            "rect": [
+              60,
+              74,
+              36,
+              0.4
+            ],
+            "stroke": "#D9D5CE",
+            "strokeMm": 0.25
+          },
+          {
+            "type": "shape",
+            "shape": "line",
+            "rect": [
+              60,
+              88,
+              36,
+              0.4
+            ],
+            "stroke": "#D9D5CE",
+            "strokeMm": 0.25
+          },
+          {
+            "type": "shape",
+            "shape": "line",
+            "rect": [
+              60,
+              102,
+              36,
+              0.4
+            ],
+            "stroke": "#D9D5CE",
+            "strokeMm": 0.25
+          }
         ]
       }
     ]
@@ -66,24 +243,89 @@
     "kind": "cards",
     "paperId": "a4",
     "orientation": "portrait",
-    "marginsMm": 8,
-    "pageSize": { "widthMm": 85, "heightMm": 55 },
+    "marginsMm": 4,
+    "pageSize": {
+      "widthMm": 85,
+      "heightMm": 55
+    },
     "pageCount": 10,
     "settings": {
-      "imposition": { "binding": "none", "duplex": "single-sided" },
-      "nUp": { "columns": 2, "rows": 5, "gapMm": 0, "cutMarks": true },
-      "marks": { "safeAreaMm": 4 }
+      "imposition": {
+        "binding": "none",
+        "duplex": "single-sided",
+        "sheetMarginMm": 8
+      },
+      "nUp": {
+        "columns": 2,
+        "rows": 5,
+        "gapMm": 0,
+        "cutMarks": true
+      },
+      "marks": {
+        "safeAreaMm": 4
+      }
     },
     "pages": [
       {
         "elements": [
-          { "type": "text", "rect": [8, 14, 69, 12], "text": "Your name", "font": "serif", "sizePt": 12 },
-          { "type": "text", "rect": [8, 27, 69, 8], "text": "What you do", "font": "sans", "sizePt": 7, "color": "#6B6B6B", "uppercase": true, "letterSpacing": 0.1 },
-          { "type": "shape", "shape": "line", "rect": [8, 38, 18, 0.4], "stroke": "#F4A340", "strokeMm": 0.6 },
-          { "type": "text", "rect": [8, 42, 69, 8], "text": "hello@example.com", "font": "sans", "sizePt": 6.5, "color": "#6B6B6B" }
+          {
+            "type": "text",
+            "rect": [
+              8,
+              14,
+              69,
+              12
+            ],
+            "text": "Your name",
+            "font": "serif",
+            "sizePt": 12
+          },
+          {
+            "type": "text",
+            "rect": [
+              8,
+              27,
+              69,
+              8
+            ],
+            "text": "What you do",
+            "font": "sans",
+            "sizePt": 7,
+            "color": "#6B6B6B",
+            "uppercase": true,
+            "letterSpacing": 0.1
+          },
+          {
+            "type": "shape",
+            "shape": "line",
+            "rect": [
+              8,
+              38,
+              18,
+              0.4
+            ],
+            "stroke": "#F4A340",
+            "strokeMm": 0.6
+          },
+          {
+            "type": "text",
+            "rect": [
+              8,
+              42,
+              69,
+              8
+            ],
+            "text": "hello@example.com",
+            "font": "sans",
+            "sizePt": 6.5,
+            "color": "#6B6B6B"
+          }
         ]
       },
-      { "repeatOf": 0, "count": 9 }
+      {
+        "repeatOf": 0,
+        "count": 9
+      }
     ]
   },
   {
@@ -94,21 +336,62 @@
     "kind": "labels",
     "paperId": "a4",
     "orientation": "portrait",
-    "marginsMm": 10,
-    "pageSize": { "widthMm": 47.5, "heightMm": 47.5 },
+    "marginsMm": 0,
+    "pageSize": {
+      "widthMm": 47.5,
+      "heightMm": 47.5
+    },
     "pageCount": 20,
     "settings": {
-      "imposition": { "binding": "none", "duplex": "single-sided" },
-      "nUp": { "columns": 4, "rows": 5, "gapMm": 0, "cutMarks": true }
+      "imposition": {
+        "binding": "none",
+        "duplex": "single-sided",
+        "sheetMarginMm": 10
+      },
+      "nUp": {
+        "columns": 4,
+        "rows": 5,
+        "gapMm": 0,
+        "cutMarks": true
+      }
     },
     "pages": [
       {
         "elements": [
-          { "type": "shape", "shape": "ellipse", "rect": [2, 2, 43.5, 43.5], "fill": "#F4A340", "stroke": null, "strokeMm": 0 },
-          { "type": "text", "rect": [6, 18, 35.5, 14], "text": "Hello", "font": "sans", "sizePt": 12, "align": "center", "bold": true, "color": "#171717" }
+          {
+            "type": "shape",
+            "shape": "ellipse",
+            "rect": [
+              2,
+              2,
+              43.5,
+              43.5
+            ],
+            "fill": "#F4A340",
+            "stroke": null,
+            "strokeMm": 0
+          },
+          {
+            "type": "text",
+            "rect": [
+              6,
+              18,
+              35.5,
+              14
+            ],
+            "text": "Hello",
+            "font": "sans",
+            "sizePt": 12,
+            "align": "center",
+            "bold": true,
+            "color": "#171717"
+          }
         ]
       },
-      { "repeatOf": 0, "count": 19 }
+      {
+        "repeatOf": 0,
+        "count": 19
+      }
     ]
   },
   {
@@ -119,21 +402,53 @@
     "kind": "labels",
     "paperId": "a4",
     "orientation": "portrait",
-    "marginsMm": 10,
-    "pageSize": { "widthMm": 63.3, "heightMm": 34.6 },
+    "marginsMm": 3,
+    "pageSize": {
+      "widthMm": 63.3,
+      "heightMm": 34.6
+    },
     "pageCount": 24,
     "settings": {
-      "imposition": { "binding": "none", "duplex": "single-sided" },
-      "nUp": { "columns": 3, "rows": 8, "gapMm": 0, "cutMarks": true },
-      "ink": { "enabled": true, "greyscale": true, "removeBackgrounds": true, "imageDensity": 1 }
+      "imposition": {
+        "binding": "none",
+        "duplex": "single-sided",
+        "sheetMarginMm": 10
+      },
+      "nUp": {
+        "columns": 3,
+        "rows": 8,
+        "gapMm": 0,
+        "cutMarks": true
+      },
+      "ink": {
+        "enabled": true,
+        "greyscale": true,
+        "removeBackgrounds": true,
+        "imageDensity": 1
+      }
     },
     "pages": [
       {
         "elements": [
-          { "type": "text", "rect": [4, 6, 55, 24], "text": "Name\nStreet\nTown, Postcode", "font": "sans", "sizePt": 7.5, "lineHeight": 1.5 }
+          {
+            "type": "text",
+            "rect": [
+              4,
+              6,
+              55,
+              24
+            ],
+            "text": "Name\nStreet\nTown, Postcode",
+            "font": "sans",
+            "sizePt": 7.5,
+            "lineHeight": 1.5
+          }
         ]
       },
-      { "repeatOf": 0, "count": 23 }
+      {
+        "repeatOf": 0,
+        "count": 23
+      }
     ]
   }
 ]

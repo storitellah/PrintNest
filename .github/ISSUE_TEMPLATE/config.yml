@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Ask a question
+    url: mailto:hello@storitellah.com
+    about: For anything that is not a bug or a feature request.
+  - name: Read the help guides
+    url: https://github.com/storitellah/printnest/blob/main/documentation/user-guide.md
+    about: Folding, binding, duplex, borderless, calibration and paper choice.

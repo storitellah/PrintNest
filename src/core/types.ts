@@ -185,6 +185,15 @@ export interface ImpositionSettings {
    */
   flipMotion: FlipMotion;
   readingDirection: ReadingDirection;
+  /**
+   * Empty border left around the *sheet* when placing pages onto it.
+   *
+   * Distinct from `Project.margins`, which are the margins *inside* a page.
+   * Conflating the two double-applies them: a one-page-per-sheet document
+   * would have its page shrunk to fit inside its own margins. Only grid
+   * layouts — label and card sheets — normally want a sheet margin at all.
+   */
+  sheetMarginMm: number;
   /** Extra space added at the bound edge, in mm. */
   gutterMm: number;
   /** Creep compensation for thick signatures, in mm per sheet. */

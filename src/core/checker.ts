@@ -1,5 +1,5 @@
 import { imposeProject } from './imposition.ts';
-import { contentBox, getPaperSize, resolveSheet } from './paper.ts';
+import { contentBox, getPaperSize, resolveSheet, uniformMargins } from './paper.ts';
 import { isBooklet, projectSheet } from './project.ts';
 import type { PrinterProfile } from './printerProfiles.ts';
 import { assessImageElement } from './resolution.ts';
@@ -478,7 +478,8 @@ function checkPageFitsSheet(
   sheet: { widthMm: number; heightMm: number },
   issues: CheckIssue[],
 ): void {
-  const box = contentBox(sheet, project.margins);
+  // Sheet margins, not the page's own — the page is placed inside the former.
+  const box = contentBox(sheet, uniformMargins(project.settings.imposition.sheetMarginMm));
   const { binding } = project.settings.imposition;
   if (binding !== 'none') return;
   const { columns, rows } = project.settings.nUp;

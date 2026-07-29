@@ -144,7 +144,7 @@ export async function validateFile(file: File): Promise<ValidatedFile | Validati
     };
   }
 
-  const head = new Uint8Array(await file.slice(0, 4096).arrayBuffer());
+  const head = await readHead(file, 4096);
   const sniffed = sniffMime(head);
   const byExtension = EXTENSION_MIME[fileExtension(name)];
   // Prefer the sniffed type; fall back to the extension only for formats with
@@ -342,6 +342,23 @@ export async function measureImage(blob: Blob): Promise<{ width: number; height:
       resolve(null);
     };
     image.src = url;
+  });
+}
+
+/**
+ * Read the first `length` bytes of a file, via `FileReader` where
+ * `Blob.arrayBuffer` is unavailable (Safari before 14).
+ */
+async function readHead(file: File, length: number): Promise<Uint8Array> {
+  const slice = file.slice(0, length);
+  if (typeof slice.arrayBuffer === 'function') {
+    return new Uint8Array(await slice.arrayBuffer());
+  }
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(new Uint8Array(reader.result as ArrayBuffer));
+    reader.onerror = () => resolve(new Uint8Array(0));
+    reader.readAsArrayBuffer(slice);
   });
 }
 

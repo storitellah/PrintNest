@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel an in-flight run when a branch is pushed again — the older result is
+# no longer interesting.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Typecheck, test and build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # `npm ci` installs exactly what the lock file says, which is the point
+      # of committing it.
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm run test
+
+      # This runs the typechecker again, but it is also the only thing that
+      # proves the production bundle and the service worker actually build.
+      - name: Build
+        run: npm run build
+
+      - name: Check the build output
+        run: |
+          test -f dist/index.html
+          test -f dist/sw.js
+          test -f dist/precache.json
+          test -f dist/manifest.webmanifest
+          test -f dist/_headers
+          test -f dist/_redirects
+          test -f dist/404.html
+          echo "Build output looks complete."
+
+  audit:
+    name: Audit production dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # Advisory: a new advisory against a transitive dependency should not
+      # block an unrelated pull request, but it should be visible.
+      - run: npm run audit
+        continue-on-error: true
