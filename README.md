@@ -62,7 +62,7 @@ npm install
 npm run dev        # development server on http://localhost:5173
 npm run build      # production build into dist/
 npm run preview    # serve the production build on http://localhost:4173
-npm run test       # 284 unit tests
+npm run test       # 292 unit tests
 ```
 
 Other scripts:
@@ -81,7 +81,7 @@ Requires Node 22 or newer — jsdom, which the test suite runs in, needs it.
 | --- | --- |
 | Build command | `npm run build` |
 | Output directory | `dist` |
-| Node version | `20` or newer |
+| Node version | `22` or newer |
 
 Security headers, cache rules, the SPA fallback and the custom 404 are all in
 `public/`, which Cloudflare copies verbatim into the deployment. Full
@@ -101,7 +101,7 @@ src/ui/        screens, panels, dialogs, editor interactions
 templates/     nineteen editable JSON layout definitions
 printer-profiles/  starter printer descriptions
 documentation/ deployment, architecture, printing notes, the user guide
-tests/         284 unit tests across seven suites
+tests/         292 unit tests across seven suites
 ```
 
 Two dependencies, both lazily loaded and only for PDF work:

@@ -69,4 +69,4 @@ The first release.
 - Installable PWA with offline support, local project storage, autosave and
   session recovery.
 - Light and dark modes; the print output never inherits dark mode.
-- 284 unit tests across seven suites.
+- 292 unit tests across seven suites.

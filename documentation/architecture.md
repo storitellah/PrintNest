@@ -218,7 +218,7 @@ That is a judgement about this application, not a general position.
 
 ## Testing
 
-284 tests across seven suites, organised by subject rather than by file:
+292 tests across seven suites, organised by subject rather than by file:
 
 | Suite | Covers |
 | --- | --- |
