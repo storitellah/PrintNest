@@ -1,0 +1,151 @@
+/* Reset and base element styles. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--pn-bg);
+  color: var(--pn-text);
+  font-family: var(--pn-font-sans);
+  font-size: var(--pn-text-base);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--pn-font-serif);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+}
+
+img,
+svg,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: var(--pn-focus);
+  text-underline-offset: 0.2em;
+}
+
+::selection {
+  background: var(--pn-selection);
+}
+
+/* One visible focus treatment everywhere, never removed. */
+:focus-visible {
+  outline: 2px solid var(--pn-focus);
+  outline-offset: 2px;
+  border-radius: var(--pn-radius-sm);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Content that is available to screen readers but not painted. */
+.pn-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.pn-skip-link {
+  position: absolute;
+  top: -100px;
+  left: var(--pn-space-3);
+  z-index: 100;
+  padding: var(--pn-space-2) var(--pn-space-4);
+  background: var(--pn-surface-raised);
+  border: 1px solid var(--pn-border-strong);
+  border-radius: var(--pn-radius);
+  box-shadow: var(--pn-shadow);
+  transition: top var(--pn-transition);
+}
+
+.pn-skip-link:focus {
+  top: var(--pn-space-3);
+}
+
+/*
+ * Reduced motion. Animations in PrintNest are decorative — the paper stack, the
+ * folding zine, the ink drop — so they are removed wholesale rather than
+ * shortened, and nothing depends on them to convey state.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Scrollbars that suit the warm palette without hiding themselves. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--pn-border-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--pn-border-strong);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: var(--pn-radius-pill);
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}

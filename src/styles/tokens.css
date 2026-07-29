@@ -1,0 +1,155 @@
+/*
+ * PrintNest design tokens.
+ *
+ * A small editorial palette: warm paper rather than pure white, ink black
+ * rather than #000, and three signal colours that are always paired with text
+ * or an icon so status is never carried by colour alone.
+ *
+ * Fonts are system stacks. PrintNest is offline-first, and a web font that
+ * fails to load would change every measurement on the page.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* ---- Brand palette ---- */
+  --pn-paper: #f5f0e7;
+  --pn-ink: #171717;
+  --pn-grey: #d9d5ce;
+  --pn-orange: #f4a340;
+  --pn-blue: #3d66f5;
+  --pn-success: #3d8c63;
+  --pn-warning: #c94a4a;
+
+  /* ---- Derived surfaces (light) ---- */
+  --pn-bg: #f5f0e7;
+  --pn-bg-sunk: #ebe5da;
+  --pn-surface: #fbf8f2;
+  --pn-surface-raised: #ffffff;
+  --pn-border: #ded9d0;
+  --pn-border-strong: #c3bdb2;
+  --pn-text: #171717;
+  --pn-text-muted: #6b6660;
+  --pn-text-faint: #8c877d;
+  --pn-canvas: #e4ded2;
+
+  --pn-accent: var(--pn-orange);
+  --pn-accent-ink: #4a2f08;
+  --pn-accent-soft: #fdf0dd;
+  --pn-blue-soft: #e6ebfe;
+  --pn-success-soft: #e2f0e8;
+  --pn-warning-soft: #f8e6e6;
+
+  --pn-focus: #1b46d8;
+  --pn-selection: rgba(61, 102, 245, 0.18);
+
+  /* ---- Type ---- */
+  --pn-font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  --pn-font-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia,
+    'Times New Roman', ui-serif, serif;
+  --pn-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono',
+    monospace;
+
+  --pn-text-xs: 0.6875rem;
+  --pn-text-sm: 0.8125rem;
+  --pn-text-base: 0.9375rem;
+  --pn-text-lg: 1.125rem;
+  --pn-text-xl: 1.5rem;
+  --pn-text-2xl: 2rem;
+  --pn-text-3xl: 2.75rem;
+
+  /* ---- Space ---- */
+  --pn-space-1: 0.25rem;
+  --pn-space-2: 0.5rem;
+  --pn-space-3: 0.75rem;
+  --pn-space-4: 1rem;
+  --pn-space-5: 1.5rem;
+  --pn-space-6: 2rem;
+  --pn-space-7: 3rem;
+
+  --pn-radius-sm: 4px;
+  --pn-radius: 8px;
+  --pn-radius-lg: 14px;
+  --pn-radius-pill: 999px;
+
+  --pn-shadow-sm: 0 1px 2px rgba(23, 23, 23, 0.06), 0 1px 3px rgba(23, 23, 23, 0.04);
+  --pn-shadow: 0 2px 6px rgba(23, 23, 23, 0.08), 0 8px 24px rgba(23, 23, 23, 0.06);
+  --pn-shadow-lg: 0 12px 40px rgba(23, 23, 23, 0.16);
+  --pn-shadow-page: 0 1px 2px rgba(23, 23, 23, 0.12), 0 6px 18px rgba(23, 23, 23, 0.1);
+
+  /* ---- Layout ---- */
+  --pn-panel-left: 264px;
+  --pn-panel-right: 300px;
+  --pn-topbar-height: 56px;
+  --pn-bottomnav-height: 60px;
+
+  --pn-transition: 160ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+/* Dark mode. Follows the system unless the user picks a theme explicitly. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --pn-bg: #1a1917;
+    --pn-bg-sunk: #131211;
+    --pn-surface: #232120;
+    --pn-surface-raised: #2b2927;
+    --pn-border: #3a3734;
+    --pn-border-strong: #4d4945;
+    --pn-text: #f3efe7;
+    --pn-text-muted: #b3ada3;
+    --pn-text-faint: #8b857c;
+    --pn-canvas: #100f0e;
+
+    --pn-accent-ink: #2a1a02;
+    --pn-accent-soft: #3a2d18;
+    --pn-blue-soft: #1e2645;
+    --pn-success-soft: #1a2f24;
+    --pn-warning-soft: #3a2020;
+
+    --pn-focus: #8aa4ff;
+    --pn-selection: rgba(138, 164, 255, 0.22);
+
+    --pn-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --pn-shadow: 0 2px 6px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.35);
+    --pn-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.55);
+    --pn-shadow-page: 0 1px 2px rgba(0, 0, 0, 0.6), 0 6px 18px rgba(0, 0, 0, 0.45);
+  }
+}
+
+/* Explicit dark theme, chosen from the interface. */
+:root[data-theme='dark'] {
+  --pn-bg: #1a1917;
+  --pn-bg-sunk: #131211;
+  --pn-surface: #232120;
+  --pn-surface-raised: #2b2927;
+  --pn-border: #3a3734;
+  --pn-border-strong: #4d4945;
+  --pn-text: #f3efe7;
+  --pn-text-muted: #b3ada3;
+  --pn-text-faint: #8b857c;
+  --pn-canvas: #100f0e;
+
+  --pn-accent-ink: #2a1a02;
+  --pn-accent-soft: #3a2d18;
+  --pn-blue-soft: #1e2645;
+  --pn-success-soft: #1a2f24;
+  --pn-warning-soft: #3a2020;
+
+  --pn-focus: #8aa4ff;
+  --pn-selection: rgba(138, 164, 255, 0.22);
+
+  --pn-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --pn-shadow: 0 2px 6px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --pn-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.55);
+  --pn-shadow-page: 0 1px 2px rgba(0, 0, 0, 0.6), 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+
+/* Higher contrast for people who have asked the OS for it. */
+@media (prefers-contrast: more) {
+  :root {
+    --pn-border: #8c877d;
+    --pn-border-strong: #4a4640;
+    --pn-text-muted: #4a4640;
+  }
+}

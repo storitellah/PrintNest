@@ -144,6 +144,16 @@ export function quarterSheet(sheet: Sheet): Sheet {
   return { widthMm: sheet.widthMm / 4, heightMm: sheet.heightMm / 2 };
 }
 
+/**
+ * The page size that fits `divisor` pages onto one sheet: 1 for a full page,
+ * 2 for a folded half, 4 for the mini-zine cell.
+ */
+export function subdivideSheet(sheet: Sheet, divisor: 1 | 2 | 4): Sheet {
+  if (divisor === 2) return halfSheet(sheet);
+  if (divisor === 4) return quarterSheet(sheet);
+  return { ...sheet };
+}
+
 export function describeSheet(sheet: Sheet): string {
   return `${roundTo(sheet.widthMm, 1)} × ${roundTo(sheet.heightMm, 1)} mm`;
 }
@@ -162,4 +172,12 @@ export function matchPaperSize(widthMm: number, heightMm: number): PaperSize | u
       Math.abs(p.heightMm - widthMm) < tolerance && Math.abs(p.widthMm - heightMm) < tolerance;
     return portrait || landscape;
   });
+}
+
+/**
+ * Resolve a catalogue entry into a concrete sheet. A convenience for callers
+ * that hold a `PaperSize` rather than a project.
+ */
+export function projectSheetFromPaper(paper: PaperSize, orientation: Orientation): Sheet {
+  return resolveSheet({ widthMm: paper.widthMm, heightMm: paper.heightMm }, orientation);
 }

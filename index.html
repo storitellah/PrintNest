@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <title>PrintNest by Storitellah — Make it. Arrange it. Print it at home.</title>
+    <meta
+      name="description"
+      content="A local-first browser workspace for preparing and printing zines, books, photographs, artworks, posters, cards and labels on a home printer. Nothing is uploaded."
+    />
+    <meta name="author" content="Storitellah" />
+    <meta name="theme-color" content="#F5F0E7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1A1917" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+
+    <!--
+      Content Security Policy.
+
+      PrintNest loads nothing from anywhere else, so the policy is as tight as a
+      bundled application can be:
+        - `default-src 'none'` denies by default; every directive is opt-in.
+        - `script-src 'self'` allows only our own bundle. No inline scripts, no
+          `eval`, no CDN.
+        - `img-src` needs `blob:` for imported files and `data:` for the icons
+          embedded in the manifest.
+        - `connect-src 'self'` is only for the service worker fetching our own
+          assets — there is no API to talk to.
+        - `frame-ancestors 'none'` stops the app being framed.
+
+      The Cloudflare `_headers` file sends the same policy as a real header,
+      which is what enforces `frame-ancestors`; this meta tag is the fallback
+      for other hosts and for `npm run preview`.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'none';
+        script-src 'self';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' blob: data:;
+        font-src 'self';
+        connect-src 'self' blob:;
+        worker-src 'self' blob:;
+        manifest-src 'self';
+        media-src 'self' blob:;
+        base-uri 'none';
+        form-action 'none';
+        frame-ancestors 'none';
+      "
+    />
+    <meta name="referrer" content="no-referrer" />
+
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icons/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="PrintNest" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="PrintNest by Storitellah" />
+    <meta property="og:description" content="Make it. Arrange it. Print it at home." />
+    <meta property="og:image" content="./icons/icon-512.png" />
+
+    <style>
+      /*
+        A minimal inline loading state so the first paint is warm paper rather
+        than a white flash. Replaced by the application as soon as it boots.
+      */
+      html {
+        background: #f5f0e7;
+        color: #171717;
+        font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: #1a1917;
+          color: #f3efe7;
+        }
+      }
+      .pn-boot {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        min-height: 100dvh;
+        text-align: center;
+        padding: 2rem;
+      }
+      .pn-boot__name {
+        font-family: 'Iowan Old Style', Palatino, Georgia, serif;
+        font-size: 1.75rem;
+        font-weight: 600;
+      }
+      .pn-boot__tagline {
+        opacity: 0.65;
+        font-style: italic;
+      }
+      .pn-boot noscript {
+        max-width: 44ch;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <div class="pn-boot">
+        <svg width="56" height="56" viewBox="0 0 32 32" role="img" aria-label="PrintNest">
+          <rect x="1.5" y="1.5" width="29" height="29" rx="8" fill="#F4A340" />
+          <path d="M11 6h8l3 3v12h-11z" fill="#FBF8F2" />
+          <path d="M9 10h7l2.5 2.5V22H9z" fill="#fff" stroke="#4A2F08" stroke-width="1.2" />
+        </svg>
+        <p class="pn-boot__name">PrintNest</p>
+        <p class="pn-boot__tagline">Make it. Arrange it. Print it at home.</p>
+        <noscript>
+          PrintNest prepares your pages in the browser itself, so it needs
+          JavaScript switched on. Nothing is ever uploaded — the code runs
+          entirely on your device.
+        </noscript>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

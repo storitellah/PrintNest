@@ -15,11 +15,11 @@ import { ptToMm } from './units.ts';
  * ## Sandboxing
  *
  * A PDF is an executable document format: it can contain JavaScript, embedded
- * files and external references. PDF.js is configured to refuse all of that —
- * scripting off, `isEvalSupported: false`, no external font or URL fetching —
- * so an imported PDF cannot reach the application or the network. Pages are
- * rasterised to images, which means nothing from the PDF's own object graph
- * survives into the project.
+ * files and external references. This import path never opts into any of it —
+ * document scripting is a viewer feature PrintNest does not enable, XFA forms
+ * are switched off, and every network-reaching option is disabled. Pages are
+ * rasterised to images, so nothing from the PDF's own object graph survives
+ * into the project.
  */
 
 export interface PdfPageImport {
@@ -50,6 +50,7 @@ export interface PdfImportOptions {
 }
 
 type PdfjsModule = typeof import('pdfjs-dist');
+type PdfDocument = Awaited<ReturnType<PdfjsModule['getDocument']>['promise']>;
 
 let pdfjsPromise: Promise<PdfjsModule> | null = null;
 
@@ -75,16 +76,21 @@ export async function importPdf(file: File, options: PdfImportOptions = {}): Pro
 
   const task = pdfjs.getDocument({
     data,
-    // Refuse everything that could execute or reach the network.
-    isEvalSupported: false,
+    // Refuse everything that could reach the network or load outside code.
+    // PDF.js only executes document JavaScript when a viewer opts in, and this
+    // import path never does; XFA forms stay off, fonts and colour profiles
+    // are never fetched, and the whole file is already in memory.
+    enableXfa: false,
+    useSystemFonts: false,
+    disableFontFace: false,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
-    useSystemFonts: false,
+    useWorkerFetch: false,
     stopAtErrors: false,
   });
 
-  let document: Awaited<ReturnType<typeof task.promise>>;
+  let document: PdfDocument;
   try {
     document = await task.promise;
   } catch (error) {
@@ -167,7 +173,8 @@ export async function importPdf(file: File, options: PdfImportOptions = {}): Pro
 
     return { pages, paperSizeId, documentName, notices };
   } finally {
-    await document.destroy();
+    // Releases the worker and every page proxy this import created.
+    await document.loadingTask.destroy();
   }
 }
 
@@ -179,11 +186,12 @@ export async function inspectPdf(
   const data = new Uint8Array(await file.arrayBuffer());
   const document = await pdfjs.getDocument({
     data,
-    isEvalSupported: false,
+    enableXfa: false,
+    useSystemFonts: false,
     disableAutoFetch: true,
     disableRange: true,
     disableStream: true,
-    useSystemFonts: false,
+    useWorkerFetch: false,
   }).promise;
 
   try {
@@ -199,6 +207,6 @@ export async function inspectPdf(
       paperSizeId: matchPaperSize(widthMm, heightMm)?.id ?? null,
     };
   } finally {
-    await document.destroy();
+    await document.loadingTask.destroy();
   }
 }

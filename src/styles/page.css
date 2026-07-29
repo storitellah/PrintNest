@@ -1,0 +1,256 @@
+/*
+ * Page and sheet rendering.
+ *
+ * Every dimension here comes from the document model in millimetres, set as an
+ * inline style by the renderer. These rules only provide positioning context,
+ * clipping and the non-printing overlays.
+ */
+
+.pn-page {
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+  /* Millimetre boxes must not inherit the app's font sizing. */
+  font-size: 12pt;
+  line-height: 1.4;
+  color: #171717;
+}
+
+.pn-page__content {
+  position: absolute;
+  inset: 0;
+}
+
+.pn-el {
+  position: absolute;
+  transform-origin: center center;
+}
+
+.pn-el__rotator {
+  position: absolute;
+  overflow: hidden;
+  transform-origin: center center;
+}
+
+.pn-el__image {
+  position: absolute;
+  max-width: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.pn-el__text {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+.pn-el__line {
+  width: 100%;
+}
+
+.pn-el--placeholder {
+  border: 0.4mm dashed var(--pn-border-strong, #c3bdb2);
+  display: grid;
+  place-items: center;
+  background: rgba(217, 213, 206, 0.18);
+}
+
+.pn-el__placeholder-label {
+  font-family: var(--pn-font-sans);
+  font-size: 8pt;
+  color: #8c877d;
+  text-align: center;
+  padding: 2mm;
+}
+
+.pn-el--missing {
+  border: 0.4mm dashed #c94a4a;
+  display: grid;
+  place-items: center;
+  background: rgba(201, 74, 74, 0.06);
+}
+
+.pn-el__missing-label {
+  font-family: var(--pn-font-sans);
+  font-size: 8pt;
+  color: #c94a4a;
+}
+
+.pn-el--loading {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(217, 213, 206, 0.35) 0 8px,
+    rgba(217, 213, 206, 0.15) 8px 16px
+  );
+}
+
+.pn-stamp {
+  position: absolute;
+  padding: 1.5mm 3mm;
+  border: 0.5mm solid #c94a4a;
+  border-radius: 1mm;
+  color: #c94a4a;
+  font-family: var(--pn-font-sans);
+  font-size: 7pt;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transform: rotate(-6deg);
+  opacity: 0.7;
+}
+
+/* ------------------------------------------------------- Preview overlays */
+
+.pn-page__overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.pn-overlay {
+  position: absolute;
+}
+
+.pn-overlay--grid {
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(61, 102, 245, 0.16) 0.2mm, transparent 0.2mm),
+    linear-gradient(to bottom, rgba(61, 102, 245, 0.16) 0.2mm, transparent 0.2mm);
+}
+
+.pn-overlay--margins {
+  border: 0.2mm dashed rgba(61, 102, 245, 0.5);
+}
+
+.pn-overlay--safe {
+  border: 0.2mm dashed rgba(61, 140, 99, 0.55);
+}
+
+.pn-overlay--bleed {
+  border: 0.2mm dashed rgba(201, 74, 74, 0.6);
+}
+
+/* ---------------------------------------------------------------- Sheets */
+
+.pn-sheet {
+  position: relative;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.pn-slot {
+  position: absolute;
+  overflow: hidden;
+}
+
+.pn-slot--blank {
+  display: grid;
+  place-items: center;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(217, 213, 206, 0.4) 0 6px,
+    rgba(217, 213, 206, 0.18) 6px 12px
+  );
+  font-family: var(--pn-font-sans);
+  font-size: 8pt;
+  color: #8c877d;
+}
+
+.pn-guides,
+.pn-marks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------- Poster */
+
+.pn-poster-window {
+  position: absolute;
+  overflow: hidden;
+}
+
+.pn-poster-image {
+  position: absolute;
+  max-width: none;
+}
+
+.pn-poster-window--empty {
+  display: grid;
+  place-items: center;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(217, 213, 206, 0.4) 0 8px,
+    rgba(217, 213, 206, 0.15) 8px 16px
+  );
+  font-family: var(--pn-font-sans);
+  font-size: 10pt;
+  color: #8c877d;
+}
+
+.pn-poster-label {
+  position: absolute;
+  top: 2mm;
+  left: 2mm;
+  padding: 1mm 2mm;
+  background: rgba(255, 255, 255, 0.9);
+  border: 0.2mm solid #d9d5ce;
+  font-family: var(--pn-font-sans);
+  font-size: 7pt;
+  color: #6b6660;
+}
+
+.pn-sheet--map {
+  padding: 15mm;
+  font-family: var(--pn-font-sans);
+  color: #171717;
+}
+
+.pn-map__title {
+  font-family: var(--pn-font-serif);
+  font-size: 18pt;
+  margin-bottom: 3mm;
+}
+
+.pn-map__note {
+  font-size: 9pt;
+  color: #6b6660;
+  margin-bottom: 8mm;
+}
+
+.pn-map__grid {
+  display: grid;
+  gap: 2mm;
+  margin-bottom: 10mm;
+}
+
+.pn-map__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1mm;
+  aspect-ratio: 1 / 1.414;
+  border: 0.3mm solid #171717;
+  font-size: 8pt;
+}
+
+.pn-map__cell strong {
+  font-size: 14pt;
+}
+
+.pn-map__steps {
+  padding-left: 6mm;
+  font-size: 9pt;
+  line-height: 1.7;
+}
+
+.pn-sheet--test,
+.pn-sheet--duplex-test {
+  background: #ffffff;
+}

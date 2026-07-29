@@ -21,6 +21,7 @@ import type {
   TextElement,
 } from '../core/types.ts';
 import { PT_PER_INCH, mmToPt } from '../core/units.ts';
+import { canvasToBlob, createCanvas } from '../core/assets.ts';
 import type { DecodedImage } from './canvasRender.ts';
 import { decodeProjectImages, rasterizeImageElement, releaseImages } from './canvasRender.ts';
 import { alignOffset, wrapText } from './textLayout.ts';
@@ -604,7 +605,6 @@ async function rasterizePosterTile(
   tile: { sourceXMm: number; sourceYMm: number; sourceWidthMm: number; sourceHeightMm: number },
   dpi: number,
 ): Promise<Blob | null> {
-  const { createCanvas, canvasToBlob } = await import('../core/assets.ts');
   const pxPerMm = dpi / 25.4;
   const widthPx = Math.max(1, Math.round(tile.sourceWidthMm * pxPerMm));
   const heightPx = Math.max(1, Math.round(tile.sourceHeightMm * pxPerMm));
