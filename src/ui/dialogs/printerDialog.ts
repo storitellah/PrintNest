@@ -243,13 +243,13 @@ function profileEditor(
             onChange: (checked) => void update({ manualDuplex: checked }),
           }),
           selectField({
-            label: 'Paper flip direction',
+            label: 'How the stack is turned over',
             hint: 'The manual duplex assistant fills this in for you after the one-sheet test.',
             value: profile.duplexFlip,
             options: [
               { value: 'unknown', label: 'Not tested yet' },
-              { value: 'long', label: 'Flip on the long edge' },
-              { value: 'short', label: 'Flip on the short edge' },
+              { value: 'left-right', label: 'Turn the stack left to right' },
+              { value: 'top-bottom', label: 'Turn the stack top to bottom' },
             ],
             onChange: (value) => void update({ duplexFlip: value as PrinterProfile['duplexFlip'] }),
           }),

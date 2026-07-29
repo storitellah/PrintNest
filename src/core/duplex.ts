@@ -1,4 +1,5 @@
 import type { PrinterProfile } from './printerProfiles.ts';
+import type { FlipMotion } from './types.ts';
 
 /**
  * Manual duplex logic.
@@ -14,11 +15,25 @@ import type { PrinterProfile } from './printerProfiles.ts';
  */
 
 export type FlipEdge = 'long' | 'short';
+
+/**
+ * The driver's name for a motion, given the shape of the sheet.
+ *
+ * A sheet turns about one of its edges. On landscape paper the long edges run
+ * along the top and bottom, so turning about them tips the sheet top to
+ * bottom; on portrait paper the long edges are the sides, so the same name
+ * means a left-to-right turn. PrintNest only uses this to *label* what the
+ * user is doing — nothing in the layout depends on it.
+ */
+export function flipEdgeLabel(motion: FlipMotion, sheetIsLandscape: boolean): FlipEdge {
+  if (motion === 'left-right') return sheetIsLandscape ? 'short' : 'long';
+  return sheetIsLandscape ? 'long' : 'short';
+}
 export type FeedEdge = 'top-first' | 'bottom-first';
 export type FaceDirection = 'up' | 'down';
 
 export interface DuplexSetup {
-  flipEdge: FlipEdge;
+  flipMotion: FlipMotion;
   /** Which way pages stack in the output tray. */
   outputFaceUp: boolean;
   /** Reverse the order of the second pass. */
@@ -52,20 +67,28 @@ export type DuplexDiagram =
   | 'done';
 
 /**
- * The default setup for the overwhelmingly common case: a small home inkjet
- * with a front-loading tray that delivers pages face up.
+ * The default setup.
+ *
+ * The book-page motion — lifting the stack and turning it left to right — is
+ * what almost everyone does unprompted, and it is the motion PrintNest's
+ * layouts are generated for, so it is the default until a printer profile says
+ * otherwise.
  */
 export function defaultSetup(profile: PrinterProfile | null): DuplexSetup {
   const faceUp = profile?.outputFaceUp ?? true;
-  const flipEdge: FlipEdge = profile?.duplexFlip === 'short' ? 'short' : 'long';
+  const motion: FlipMotion =
+    profile && profile.duplexFlip !== 'unknown' ? profile.duplexFlip : 'left-right';
+
   return {
-    flipEdge,
+    flipMotion: motion,
     outputFaceUp: faceUp,
     // Face-up output stacks the run in reverse, so the second pass must be
     // reversed to line up without hand-sorting.
     reverseSecondPass: faceUp,
-    rotateStack: flipEdge === 'short',
-    feedEdge: 'top-first',
+    // A top-to-bottom turn already lands the content a half turn out, which
+    // PrintNest compensates for in the layout — the stack itself is not spun.
+    rotateStack: false,
+    feedEdge: motion === 'top-bottom' ? 'bottom-first' : 'top-first',
     reloadFace: faceUp ? 'down' : 'up',
   };
 }
@@ -73,6 +96,7 @@ export function defaultSetup(profile: PrinterProfile | null): DuplexSetup {
 /** The full walkthrough for a given setup. */
 export function buildSteps(setup: DuplexSetup, sheetCount: number): DuplexStep[] {
   const sheets = Math.max(1, Math.ceil(sheetCount / 2));
+  const motion = setup.flipMotion;
   return [
     {
       id: 'print-fronts',
@@ -90,19 +114,19 @@ export function buildSteps(setup: DuplexSetup, sheetCount: number): DuplexStep[]
     },
     {
       id: 'flip',
-      title: setup.flipEdge === 'long' ? 'Flip along the long edge' : 'Flip along the short edge',
+      title: motion === 'left-right' ? 'Turn the stack left to right' : 'Turn the stack top to bottom',
       detail:
-        setup.flipEdge === 'long'
-          ? 'Turn the stack over like turning a page in a book — left to right, keeping the top edge at the top.'
-          : 'Turn the stack over like flipping a calendar — bottom to top, so the top edge becomes the bottom.',
-      diagram: setup.flipEdge === 'long' ? 'flip-long-edge' : 'flip-short-edge',
+        motion === 'left-right'
+          ? 'Like turning a page in a book: keep the top edge at the top and swing the stack over sideways.'
+          : 'Like flipping a calendar: swing the stack over so the edge that was at the top ends up at the bottom.',
+      diagram: motion === 'left-right' ? 'flip-long-edge' : 'flip-short-edge',
     },
     {
       id: 'rotate',
       title: setup.rotateStack ? 'Rotate the stack 180°' : 'Do not rotate the stack',
       detail: setup.rotateStack
         ? 'Spin the stack a half turn on the table so the edge that came out last goes back in first.'
-        : 'Leave the stack the way round it is — only the flip is needed.',
+        : 'Leave the stack the way round it is — the turn you just made is all that is needed.',
       diagram: setup.rotateStack ? 'rotate-180' : 'no-rotate',
     },
     {
@@ -167,11 +191,12 @@ export function interpretTest(answer: TestAnswer, current: DuplexSetup): TestOut
     case 'upside-down':
       return {
         setup: {
-          rotateStack: !current.rotateStack,
-          flipEdge: current.flipEdge === 'long' ? 'short' : 'long',
+          // The layout, not the user, absorbs the half turn: recording the
+          // other motion makes PrintNest rotate the back sides instead.
+          flipMotion: current.flipMotion === 'left-right' ? 'top-bottom' : 'left-right',
         },
         summary:
-          'The back printed upside down, so the flip edge was wrong. PrintNest has switched it and will mirror the back sides the other way.',
+          'The back printed a half turn out. PrintNest has recorded the other turn, so the back sides will be rotated to compensate.',
         confident: true,
       };
     case 'other-side':
@@ -200,7 +225,7 @@ export function interpretTest(answer: TestAnswer, current: DuplexSetup): TestOut
 export function applySetupToProfile(profile: PrinterProfile, setup: DuplexSetup): PrinterProfile {
   return {
     ...profile,
-    duplexFlip: setup.flipEdge,
+    duplexFlip: setup.flipMotion,
     outputFaceUp: setup.outputFaceUp,
   };
 }
@@ -294,11 +319,12 @@ export function buildDuplexTestSheet(
 
 /** Short human-readable summary of a setup, for the printer profile panel. */
 export function describeSetup(setup: DuplexSetup): string {
+  const motion = setup.flipMotion;
   const parts = [
-    setup.flipEdge === 'long' ? 'flip on the long edge' : 'flip on the short edge',
-    setup.rotateStack ? 'rotate 180°' : 'no rotation',
+    motion === 'left-right' ? 'turn left to right' : 'turn top to bottom',
     `reload printed side ${setup.reloadFace}`,
     `${setup.feedEdge === 'top-first' ? 'top' : 'bottom'} edge first`,
   ];
+  if (setup.rotateStack) parts.splice(1, 0, 'rotate the stack 180°');
   return parts.join(', ');
 }

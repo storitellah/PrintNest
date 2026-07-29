@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  backTransformFor,
   bookletOrder,
   cutStackOrder,
   fitPageInCell,
@@ -12,6 +13,7 @@ import {
   saddleStitchOrder,
 } from '../src/core/imposition.ts';
 import type { ImposeOptions } from '../src/core/imposition.ts';
+import { flipEdgeLabel } from '../src/core/duplex.ts';
 import { halfSheet, quarterSheet, resolveSheet, uniformMargins } from '../src/core/paper.ts';
 
 const A4_LANDSCAPE = resolveSheet({ widthMm: 210, heightMm: 297 }, 'landscape');
@@ -25,7 +27,7 @@ function options(overrides: Partial<ImposeOptions> = {}): ImposeOptions {
     binding: 'saddle-stitch',
     signatureSize: 0,
     duplex: 'manual-duplex',
-    mirrorBack: false,
+    backTransform: 'none',
     gutterMm: 0,
     creepMm: 0,
     foldMarks: true,
@@ -236,17 +238,39 @@ describe('imposeWithOptions — saddle stitch', () => {
     expect(blanks).toHaveLength(3);
   });
 
-  it('mirrors the back side when the printer flips on the long edge', () => {
-    const plain = imposeWithOptions(options({ mirrorBack: false }));
-    const mirrored = imposeWithOptions(options({ mirrorBack: true }));
+  it('lays the back side out directly when the sheet turns left to right', () => {
+    // The canonical booklet table: front 8 | 1, back 2 | 7, read as you look
+    // at each side of the sheet.
+    const result = imposeWithOptions(options({ backTransform: 'none' }));
+    const front = result.sheets[0]!.slots.map((slot) => slot.pageIndex);
+    const back = result.sheets[1]!.slots.map((slot) => slot.pageIndex);
+    expect(front).toEqual([7, 0]); // pages 8 and 1, zero-based
+    expect(back).toEqual([1, 6]); // pages 2 and 7
+    expect(result.sheets[1]!.slots.every((slot) => slot.rotation === 0)).toBe(true);
+  });
+
+  it('rotates the back side a half turn when the sheet turns top to bottom', () => {
+    const plain = imposeWithOptions(options({ backTransform: 'none' }));
+    const rotated = imposeWithOptions(options({ backTransform: 'rotate180' }));
     const plainBack = plain.sheets[1]!.slots[0]!;
-    const mirroredBack = mirrored.sheets[1]!.slots[0]!;
-    expect(mirroredBack.pageIndex).toBe(plainBack.pageIndex);
-    // Same page, opposite side of the sheet.
-    expect(mirroredBack.rect.xMm).toBeCloseTo(
+    const rotatedBack = rotated.sheets[1]!.slots[0]!;
+
+    expect(rotatedBack.pageIndex).toBe(plainBack.pageIndex);
+    expect(rotatedBack.rect.xMm).toBeCloseTo(
       A4_LANDSCAPE.widthMm - plainBack.rect.xMm - plainBack.rect.widthMm,
       6,
     );
+    expect(rotatedBack.rect.yMm).toBeCloseTo(
+      A4_LANDSCAPE.heightMm - plainBack.rect.yMm - plainBack.rect.heightMm,
+      6,
+    );
+    expect(rotatedBack.rotation).toBe(180);
+  });
+
+  it('leaves the front side untouched whatever the back transform', () => {
+    const plain = imposeWithOptions(options({ backTransform: 'none' }));
+    const rotated = imposeWithOptions(options({ backTransform: 'rotate180' }));
+    expect(rotated.sheets[0]!.slots).toEqual(plain.sheets[0]!.slots);
   });
 
   it('adds a fold guide down the centre', () => {
@@ -363,7 +387,7 @@ describe('imposeWithOptions — accordion and gatefold', () => {
 
   it('runs the accordion back side in the opposite direction', () => {
     const result = imposeWithOptions(
-      options({ binding: 'accordion', columns: 4, pageCount: 8, duplex: 'auto-duplex', mirrorBack: false }),
+      options({ binding: 'accordion', columns: 4, pageCount: 8, duplex: 'auto-duplex' }),
     );
     const back = result.sheets[1]!.slots.map((slot) => slot.pageIndex);
     expect(back).toEqual([7, 6, 5, 4]);
@@ -404,5 +428,27 @@ describe('foldedOrder', () => {
 
   it('does not invent pages that do not exist in a mini zine', () => {
     expect(foldedOrder('mini-zine-8', 5)).toEqual([0, 1, 2, 3, 4]);
+  });
+});
+
+describe('backTransformFor', () => {
+  it('leaves the back alone for a book-page turn', () => {
+    // The layouts are generated for exactly this motion, so nothing changes.
+    expect(backTransformFor('left-right')).toBe('none');
+  });
+
+  it('rotates the back for a calendar-style turn', () => {
+    expect(backTransformFor('top-bottom')).toBe('rotate180');
+  });
+});
+
+describe('flipEdgeLabel', () => {
+  it('names the same motion differently on portrait and landscape paper', () => {
+    // A landscape sheet's short edges are its vertical sides, so turning it
+    // left to right is a short-edge flip; on portrait paper it is long-edge.
+    expect(flipEdgeLabel('left-right', true)).toBe('short');
+    expect(flipEdgeLabel('left-right', false)).toBe('long');
+    expect(flipEdgeLabel('top-bottom', true)).toBe('long');
+    expect(flipEdgeLabel('top-bottom', false)).toBe('short');
   });
 });

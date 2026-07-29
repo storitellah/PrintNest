@@ -29,7 +29,7 @@ export function defaultSettings(): ProjectSettings {
       binding: 'none',
       signatureSize: 0,
       duplex: 'single-sided',
-      flipEdge: 'long',
+      flipMotion: 'left-right',
       readingDirection: 'ltr',
       gutterMm: 0,
       creepMm: 0,

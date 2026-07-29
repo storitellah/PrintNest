@@ -1,6 +1,6 @@
 import type { Margins, Orientation, Sheet } from './paper.ts';
 import { contentBox, resolveSheet } from './paper.ts';
-import type { BindingStyle, Project, Rect } from './types.ts';
+import type { BindingStyle, FlipMotion, Project, Rect } from './types.ts';
 
 /**
  * The imposition engine.
@@ -11,19 +11,21 @@ import type { BindingStyle, Project, Rect } from './types.ts';
  * booklet printing, so it lives here as pure, fully tested functions with no
  * DOM or project-store dependencies.
  *
- * ## The duplex mirroring convention
+ * ## How the back side is oriented
  *
- * Back sides are generated in the coordinate space of the *printed sheet*.
- * Which physical page ends up behind which depends on how the printer flips
- * the paper, so every duplexed layout takes a `mirrorBack` flag:
+ * Every layout here is generated in the coordinate space of the sheet as you
+ * look at it — so the back of sheet 1 of an eight-page booklet is `2 | 7`,
+ * which is what every booklet imposition reference shows.
  *
- * - `mirrorBack: true`  — the sheet is turned over left-to-right (the back
- *   side's x axis is mirrored). This is the classic booklet convention.
- * - `mirrorBack: false` — the sheet is turned over top-to-bottom, so x is
- *   preserved and the back side reads in the same direction as the front.
+ * That is correct **when the sheet is turned over left-to-right**, like a page
+ * in a book: the half that carried page 1 ends up on the left, ready to
+ * receive page 2. Turning the sheet top-to-bottom instead lands the content a
+ * half-turn out, so those layouts need the back side rotated 180°.
  *
- * The manual duplex assistant lets the user discover which one their printer
- * does with a single test sheet, and stores the answer on the printer profile.
+ * The document therefore stores the *motion*, not a driver's "long edge" /
+ * "short edge" label — those mean opposite physical actions on portrait and
+ * landscape paper. The manual duplex assistant translates between the two for
+ * display, and lets the user confirm the motion with a single test sheet.
  */
 
 export type SlotRotation = 0 | 90 | 180 | 270;
@@ -76,6 +78,12 @@ export interface ImpositionResult {
   pagesPerSide: number;
 }
 
+/**
+ * What has to happen to the back side so it lands correctly on the paper.
+ * `none` suits a left-to-right turn; `rotate180` a top-to-bottom one.
+ */
+export type BackTransform = 'none' | 'rotate180';
+
 export interface ImposeOptions {
   pageCount: number;
   sheetSize: Sheet;
@@ -84,7 +92,7 @@ export interface ImposeOptions {
   binding: BindingStyle;
   signatureSize: number;
   duplex: 'single-sided' | 'auto-duplex' | 'manual-duplex';
-  mirrorBack: boolean;
+  backTransform: BackTransform;
   gutterMm: number;
   creepMm: number;
   foldMarks: boolean;
@@ -146,9 +154,38 @@ export function gridCells(
   return cells;
 }
 
-/** Mirror a rectangle across the sheet's vertical centre line. */
-function mirrorRect(rect: Rect, sheetWidthMm: number): Rect {
-  return { ...rect, xMm: sheetWidthMm - rect.xMm - rect.widthMm };
+/** Rotate a rectangle a half turn about the centre of the sheet. */
+function rotateRect180(rect: Rect, sheetWidthMm: number, sheetHeightMm: number): Rect {
+  return {
+    ...rect,
+    xMm: sheetWidthMm - rect.xMm - rect.widthMm,
+    yMm: sheetHeightMm - rect.yMm - rect.heightMm,
+  };
+}
+
+/** Apply a back-side transform to one placement. */
+function transformBackSlot(
+  slot: SlotPlacement,
+  transform: BackTransform,
+  sheetSize: Sheet,
+): SlotPlacement {
+  if (transform === 'none') return slot;
+  return {
+    ...slot,
+    rect: rotateRect180(slot.rect, sheetSize.widthMm, sheetSize.heightMm),
+    // The page itself turns with the sheet, so its own rotation turns too.
+    rotation: (((slot.rotation + 180) % 360) as SlotRotation),
+  };
+}
+
+/**
+ * The back-side transform a flip motion needs.
+ *
+ * A left-to-right turn is what the layouts are generated for, so it needs
+ * nothing. A top-to-bottom turn lands the sheet a half turn out.
+ */
+export function backTransformFor(motion: FlipMotion): BackTransform {
+  return motion === 'left-right' ? 'none' : 'rotate180';
 }
 
 /** Round a page count up to the next multiple of `multiple`. */
@@ -345,11 +382,12 @@ function imposeNUp(ctx: BuildContext): ImpositionResult {
     const isBack = duplexed && side % 2 === 1;
     const slots: SlotPlacement[] = cells.map((cell, cellIndex) => {
       const rect = fitPageInCell(ctx.pageSize, cell);
-      return {
+      const slot: SlotPlacement = {
         pageIndex: pageIndex(side * perSide + cellIndex + 1, ctx.actualPageCount),
-        rect: isBack && ctx.mirrorBack ? mirrorRect(rect, ctx.sheetSize.widthMm) : rect,
+        rect,
         rotation: 0,
       };
+      return isBack ? transformBackSlot(slot, ctx.backTransform, ctx.sheetSize) : slot;
     });
     sheets.push({
       sheetNumber: duplexed ? Math.floor(side / 2) + 1 : side + 1,
@@ -414,9 +452,7 @@ function imposeTwoUpBooklet(ctx: BuildContext, mode: 'saddle' | 'cut-stack'): Im
       placeLeft(sheetOrder.backLeft),
       placeRight(sheetOrder.backRight),
     ];
-    const back = ctx.mirrorBack
-      ? backRaw.map((slot) => ({ ...slot, rect: mirrorRect(slot.rect, ctx.sheetSize.widthMm) }))
-      : backRaw;
+    const back = backRaw.map((slot) => transformBackSlot(slot, ctx.backTransform, ctx.sheetSize));
 
     const guides: GuideLine[] =
       mode === 'saddle'
@@ -540,12 +576,12 @@ function imposeAccordion(ctx: BuildContext): ImpositionResult {
       // The back of an accordion runs in the opposite direction so that panel
       // n's reverse sits behind panel n.
       const back: SlotPlacement[] = cells.map((cell, i) => {
-        const rect = fitPageInCell(ctx.pageSize, cell);
-        return {
+        const slot: SlotPlacement = {
           pageIndex: pageIndex(s * perSheet + panels + (panels - i), ctx.actualPageCount),
-          rect: ctx.mirrorBack ? mirrorRect(rect, ctx.sheetSize.widthMm) : rect,
+          rect: fitPageInCell(ctx.pageSize, cell),
           rotation: 0,
         };
+        return transformBackSlot(slot, ctx.backTransform, ctx.sheetSize);
       });
       sheets.push({
         sheetNumber: s + 1,
@@ -597,12 +633,12 @@ function imposeGatefold(ctx: BuildContext): ImpositionResult {
     for (let side = 0; side < (duplexed ? 2 : 1); side += 1) {
       const isBack = side === 1;
       const slots = cells.map((cell, i) => {
-        const rect = fitPageInCell(ctx.pageSize, cell);
-        return {
+        const slot: SlotPlacement = {
           pageIndex: pageIndex(s * perSheet + side * 4 + i + 1, ctx.actualPageCount),
-          rect: isBack && ctx.mirrorBack ? mirrorRect(rect, ctx.sheetSize.widthMm) : rect,
-          rotation: 0 as SlotRotation,
+          rect: fitPageInCell(ctx.pageSize, cell),
+          rotation: 0,
         };
+        return isBack ? transformBackSlot(slot, ctx.backTransform, ctx.sheetSize) : slot;
       });
       sheets.push({
         sheetNumber: s + 1,
@@ -730,7 +766,7 @@ export function imposeProject(project: Project): ImpositionResult {
     binding: imposition.binding,
     signatureSize: imposition.signatureSize,
     duplex: imposition.duplex,
-    mirrorBack: imposition.flipEdge === 'long',
+    backTransform: backTransformFor(imposition.flipMotion),
     gutterMm: imposition.gutterMm,
     creepMm: imposition.creepMm,
     foldMarks: imposition.foldMarks,

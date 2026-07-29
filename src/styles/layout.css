@@ -167,7 +167,8 @@
   flex: 1;
   min-height: 0;
   overflow: auto;
-  padding: var(--pn-space-5);
+  /* Extra headroom so each stage's floating label is not clipped. */
+  padding: var(--pn-space-6) var(--pn-space-5) var(--pn-space-5);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -273,6 +274,37 @@
   }
 
   .pn-brand__tagline {
+    display: none;
+  }
+
+  /*
+   * The narrow top bar keeps only what cannot live in the bottom navigation:
+   * the project name, undo/redo and Print. Save state is dropped because the
+   * app autosaves and the text has nowhere to sit without crowding.
+   */
+  .pn-savestate {
+    display: none;
+  }
+
+  .pn-topbar {
+    gap: var(--pn-space-2);
+    padding: 0 var(--pn-space-2);
+  }
+
+  .pn-topbar__project-name {
+    max-width: none;
+    width: 100%;
+    font-size: var(--pn-text-base);
+  }
+
+  .pn-topbar__actions {
+    gap: var(--pn-space-1);
+  }
+}
+
+@media (max-width: 520px) {
+  /* Print keeps its label; everything else collapses to an icon. */
+  .pn-topbar__actions .pn-btn:not(.pn-btn--print) span {
     display: none;
   }
 }

@@ -86,7 +86,7 @@
 .pn-pagelist__item {
   display: flex;
   align-items: center;
-  gap: var(--pn-space-3);
+  gap: var(--pn-space-2);
   width: 100%;
   padding: var(--pn-space-2);
   border: 1px solid transparent;
@@ -132,7 +132,32 @@
 
 .pn-pagelist__meta {
   min-width: 0;
-  flex: 1;
+  flex: 1 1 auto;
+}
+
+/*
+ * Row actions stay out of the way until the row is hovered or focused, so the
+ * page name gets the width it needs. They remain in the tab order throughout,
+ * and are always visible on touch devices where there is no hover.
+ */
+.pn-pagelist__actions {
+  display: flex;
+  gap: 2px;
+  flex: none;
+  opacity: 0;
+  transition: opacity var(--pn-transition);
+}
+
+.pn-pagelist__item:hover .pn-pagelist__actions,
+.pn-pagelist__item:focus-within .pn-pagelist__actions,
+.pn-pagelist__item[aria-current='true'] .pn-pagelist__actions {
+  opacity: 1;
+}
+
+@media (pointer: coarse) {
+  .pn-pagelist__actions {
+    opacity: 1;
+  }
 }
 
 .pn-pagelist__name {
@@ -150,9 +175,16 @@
 
 .pn-pagelist__grip {
   flex: none;
-  width: 20px;
+  width: 16px;
   color: var(--pn-text-faint);
   cursor: grab;
+}
+
+@media (max-width: 1100px) {
+  /* Below this the panel is too narrow to spare the width. */
+  .pn-pagelist__grip {
+    display: none;
+  }
 }
 
 /* ------------------------------------------------------------ Asset tray */

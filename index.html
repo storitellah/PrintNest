@@ -26,11 +26,11 @@
           embedded in the manifest.
         - `connect-src 'self'` is only for the service worker fetching our own
           assets — there is no API to talk to.
-        - `frame-ancestors 'none'` stops the app being framed.
 
-      The Cloudflare `_headers` file sends the same policy as a real header,
-      which is what enforces `frame-ancestors`; this meta tag is the fallback
-      for other hosts and for `npm run preview`.
+      `frame-ancestors` is deliberately absent here: browsers ignore it when it
+      arrives in a meta tag. It is sent as a real header, alongside
+      `X-Frame-Options`, from `public/_headers`. This meta tag is the fallback
+      that covers `npm run preview` and any host that does not read that file.
     -->
     <meta
       http-equiv="Content-Security-Policy"
@@ -46,7 +46,6 @@
         media-src 'self' blob:;
         base-uri 'none';
         form-action 'none';
-        frame-ancestors 'none';
       "
     />
     <meta name="referrer" content="no-referrer" />

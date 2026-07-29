@@ -163,13 +163,27 @@ export type DuplexMode = 'single-sided' | 'auto-duplex' | 'manual-duplex';
 
 export type ReadingDirection = 'ltr' | 'rtl';
 
+/**
+ * Turning the stack left-to-right is the book-page motion every booklet
+ * imposition assumes; top-to-bottom lands the content a half turn out and is
+ * compensated for in the layout.
+ */
+export type FlipMotion = 'left-right' | 'top-bottom';
+
 export interface ImpositionSettings {
   binding: BindingStyle;
   /** Pages per signature; 0 means "one signature for the whole book". */
   signatureSize: number;
   duplex: DuplexMode;
-  /** Long-edge flip is the common default for manual duplex on most printers. */
-  flipEdge: 'long' | 'short';
+  /**
+   * How the user turns the stack over between manual duplex passes.
+   *
+   * Stored as the *motion*, never as "long edge"/"short edge": those names
+   * mean opposite physical actions on portrait and landscape paper, so a
+   * document that stored an edge name would silently change meaning the
+   * moment someone rotated the page.
+   */
+  flipMotion: FlipMotion;
   readingDirection: ReadingDirection;
   /** Extra space added at the bound edge, in mm. */
   gutterMm: number;

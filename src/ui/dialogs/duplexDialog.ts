@@ -4,6 +4,7 @@ import {
   buildSteps,
   defaultSetup,
   describeSetup,
+  flipEdgeLabel,
   interpretTest,
 } from '../../core/duplex.ts';
 import type { DuplexDiagram, DuplexSetup, TestAnswer } from '../../core/duplex.ts';
@@ -35,6 +36,10 @@ export async function openDuplexAssistant(): Promise<void> {
 
   const profiles = await loadProfiles();
   let profile = getProfile(profiles, project.settings.printerProfileId);
+  // Whether the paper is wider than it is tall decides what "flip on the long
+  // edge" physically means, so every instruction below is derived from it.
+  const paper = projectSheet(project);
+  const sheetIsLandscape = paper.widthMm > paper.heightMm;
   let setup = defaultSetup(profile);
   let stage: Stage = 'intro';
 
@@ -216,22 +221,27 @@ export async function openDuplexAssistant(): Promise<void> {
   function renderReload(): void {
     handle.setTitle('Turn the stack over', 'The step that decides whether this works');
 
+    const motion = setup.flipMotion;
+
+    // The choice is offered as a motion, not as driver jargon: "long edge"
+    // means opposite things on portrait and landscape paper, and the user is
+    // holding the paper, not reading the driver manual.
     const options: { label: string; note: string; apply: () => void; active: boolean }[] = [
       {
-        label: 'Flip on the long edge',
-        note: 'Like turning a page in a book — left to right.',
+        label: 'Turn it left to right',
+        note: 'Like turning a page in a book. The top edge stays at the top.',
         apply: () => {
-          setup = { ...setup, flipEdge: 'long', rotateStack: false };
+          setup = { ...setup, flipMotion: 'left-right', feedEdge: 'top-first' };
         },
-        active: setup.flipEdge === 'long',
+        active: motion === 'left-right',
       },
       {
-        label: 'Flip on the short edge',
-        note: 'Like flipping a calendar — bottom to top.',
+        label: 'Turn it top to bottom',
+        note: 'Like flipping a calendar. The top edge ends up at the bottom.',
         apply: () => {
-          setup = { ...setup, flipEdge: 'short', rotateStack: true };
+          setup = { ...setup, flipMotion: 'top-bottom', feedEdge: 'bottom-first' };
         },
-        active: setup.flipEdge === 'short',
+        active: motion === 'top-bottom',
       },
     ];
 
@@ -239,11 +249,16 @@ export async function openDuplexAssistant(): Promise<void> {
       el(
         'div',
         { class: 'pn-duplex' },
-        diagram(setup.flipEdge === 'long' ? 'flip-long-edge' : 'flip-short-edge'),
+        diagram(motion === 'left-right' ? 'flip-long-edge' : 'flip-short-edge'),
         el(
           'div',
           {},
           el('h3', { text: 'How to turn the stack', style: { marginBottom: '0.5rem' } }),
+          el('p', {
+            class: 'pn-field__hint',
+            style: { marginBottom: '0.5rem' },
+            text: `Your paper is ${sheetIsLandscape ? 'landscape' : 'portrait'}, so this is what a printer driver would call a ${flipEdgeLabel(motion, sheetIsLandscape)}-edge flip.`,
+          }),
           el(
             'div',
             { class: 'pn-segment', role: 'radiogroup', 'aria-label': 'Flip direction' },
@@ -443,7 +458,7 @@ export async function openDuplexAssistant(): Promise<void> {
         'ol',
         { class: 'pn-help-steps' },
         step('Print the test sheet', 'One sheet with a big FRONT · TOP mark. Use plain paper.'),
-        step('Take it out and turn it over', `Use the flip you were going to use: ${describeSetup(setup)}.`),
+        step('Take it out and turn it over', `Use the turn you were going to use: ${describeSetup(setup)}.`),
         step('Print the second side', 'PrintNest sends a BACK · TOP mark.'),
         step('Compare the two sides', 'Look at where the word TOP sits on each side, then answer the question.'),
       ),
@@ -587,8 +602,8 @@ export async function openDuplexAssistant(): Promise<void> {
       await saveProfile(updated);
       profile = updated;
       // Keep the document's own flip setting in step with the profile.
-      store.update((draft) => void (draft.settings.imposition.flipEdge = setup.flipEdge), {
-        label: 'flip-edge',
+      store.update((draft) => void (draft.settings.imposition.flipMotion = setup.flipMotion), {
+        label: 'flip-motion',
       });
       toast({ title: `Saved for ${updated.brand} ${updated.model}`, kind: 'success' });
     } catch (error) {
@@ -628,7 +643,7 @@ const DIAGRAM_LABELS: Record<DuplexDiagram, string> = {
   'print-fronts': 'A sheet emerging from the printer, printed side showing.',
   'collect-stack': 'A stack of printed sheets lifted from the output tray.',
   'flip-long-edge': 'A sheet turning over left to right, like a book page.',
-  'flip-short-edge': 'A sheet turning over bottom to top, like a calendar.',
+  'flip-short-edge': 'A sheet turning over top to bottom, like a calendar.',
   'rotate-180': 'A sheet spinning a half turn on the table.',
   'no-rotate': 'A sheet staying the same way round.',
   'face-up': 'A sheet going into the tray with the printed side upwards.',

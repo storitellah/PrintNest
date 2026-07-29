@@ -236,31 +236,35 @@ export function createPagesPanel(): PagesPanel {
         el('div', { class: 'pn-pagelist__note', text: roleNote }),
       ),
       el(
-        'button',
-        {
-          type: 'button',
-          class: 'pn-btn pn-btn--sm pn-btn--ghost pn-btn--icon',
-          'aria-label': `Duplicate ${labelFor(page, index)}`,
-          onclick: (event: Event) => {
-            event.stopPropagation();
-            duplicatePage(index);
+        'div',
+        { class: 'pn-pagelist__actions' },
+        el(
+          'button',
+          {
+            type: 'button',
+            class: 'pn-btn pn-btn--sm pn-btn--ghost pn-btn--icon',
+            'aria-label': `Duplicate ${labelFor(page, index)}`,
+            onclick: (event: Event) => {
+              event.stopPropagation();
+              duplicatePage(index);
+            },
           },
-        },
-        icon('copy', { size: 14 }),
-      ),
-      el(
-        'button',
-        {
-          type: 'button',
-          class: 'pn-btn pn-btn--sm pn-btn--ghost pn-btn--icon',
-          'aria-label': `Delete ${labelFor(page, index)}`,
-          disabled: store.project!.pages.length <= 1,
-          onclick: (event: Event) => {
-            event.stopPropagation();
-            deletePage(index);
+          icon('copy', { size: 14 }),
+        ),
+        el(
+          'button',
+          {
+            type: 'button',
+            class: 'pn-btn pn-btn--sm pn-btn--ghost pn-btn--icon',
+            'aria-label': `Delete ${labelFor(page, index)}`,
+            disabled: store.project!.pages.length <= 1,
+            onclick: (event: Event) => {
+              event.stopPropagation();
+              deletePage(index);
+            },
           },
-        },
-        icon('trash', { size: 14 }),
+          icon('trash', { size: 14 }),
+        ),
       ),
       icon('grip', { size: 16, class: 'pn-pagelist__grip' }),
     );

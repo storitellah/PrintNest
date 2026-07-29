@@ -2,6 +2,7 @@ import { getMeta, setMeta } from './db.ts';
 import { newId } from './ids.ts';
 import { safeColor, sanitizeLine, stripUnsafeKeys } from './sanitize.ts';
 import type { Margins } from './paper.ts';
+import type { FlipMotion } from './types.ts';
 
 /**
  * Printer profiles.
@@ -42,10 +43,11 @@ export interface PrinterProfile {
   defaultPaperType: string;
   paperTypes: string[];
   /**
-   * Learned in the manual duplex assistant: does this printer's reload flow
-   * need the back side mirrored left-to-right?
+   * Learned in the manual duplex assistant: which way the user turns the stack
+   * over for this printer. Stored as the motion rather than a driver's edge
+   * name, for the same reason the document does.
    */
-  duplexFlip: 'long' | 'short' | 'unknown';
+  duplexFlip: FlipMotion | 'unknown';
   /** Does the printer stack pages face up (so backs print in reverse)? */
   outputFaceUp: boolean | null;
   /** Scale correction measured with the calibration page, 1 = accurate. */
@@ -85,7 +87,7 @@ export const BUILT_IN_PROFILES: PrinterProfile[] = [
     qualityOptions: ['Fast', 'Normal', 'Best'],
     defaultPaperType: 'Plain Paper',
     paperTypes: ['Plain Paper', 'Inkjet Paper', 'Brother BP71 Photo', 'Other Glossy'],
-    duplexFlip: 'long',
+    duplexFlip: 'left-right',
     outputFaceUp: true,
     scaleCorrection: 1,
     notes:
@@ -114,7 +116,7 @@ export const BUILT_IN_PROFILES: PrinterProfile[] = [
     qualityOptions: ['Fast', 'Normal', 'Best'],
     defaultPaperType: 'Plain Paper',
     paperTypes: ['Plain Paper', 'Inkjet Paper', 'Glossy Photo'],
-    duplexFlip: 'long',
+    duplexFlip: 'left-right',
     outputFaceUp: true,
     scaleCorrection: 1,
     notes: 'Check your exact model — borderless support varies across the range.',
@@ -140,7 +142,7 @@ export const BUILT_IN_PROFILES: PrinterProfile[] = [
     qualityOptions: ['Draft', 'Standard', 'High', 'Best Photo'],
     defaultPaperType: 'Plain Paper',
     paperTypes: ['Plain Paper', 'Matte', 'Premium Glossy', 'Photo Paper Glossy'],
-    duplexFlip: 'long',
+    duplexFlip: 'left-right',
     outputFaceUp: true,
     scaleCorrection: 1,
     notes: 'Most EcoTank models print borderless on photo sizes and A4.',
@@ -166,7 +168,7 @@ export const BUILT_IN_PROFILES: PrinterProfile[] = [
     qualityOptions: ['Draft', 'Standard', 'High'],
     defaultPaperType: 'Plain Paper',
     paperTypes: ['Plain Paper', 'Matte Photo', 'Photo Paper Plus Glossy II', 'Photo Paper Pro'],
-    duplexFlip: 'long',
+    duplexFlip: 'left-right',
     outputFaceUp: true,
     scaleCorrection: 1,
     notes: 'PIXMA models keep a larger bottom margin on plain paper than on photo paper.',
@@ -192,7 +194,7 @@ export const BUILT_IN_PROFILES: PrinterProfile[] = [
     qualityOptions: ['Draft', 'Normal', 'Best'],
     defaultPaperType: 'Plain Paper',
     paperTypes: ['Plain Paper', 'HP Advanced Photo', 'Matte Brochure'],
-    duplexFlip: 'long',
+    duplexFlip: 'left-right',
     outputFaceUp: true,
     scaleCorrection: 1,
     notes: '',
@@ -218,7 +220,7 @@ export const BUILT_IN_PROFILES: PrinterProfile[] = [
     qualityOptions: ['Draft', 'Normal', 'Fine'],
     defaultPaperType: 'Plain Paper',
     paperTypes: ['Plain Paper', 'Recycled', 'Thick'],
-    duplexFlip: 'long',
+    duplexFlip: 'left-right',
     outputFaceUp: false,
     scaleCorrection: 1,
     notes: 'Laser printers cannot print borderless and dislike glossy photo paper.',
@@ -244,7 +246,7 @@ export const BUILT_IN_PROFILES: PrinterProfile[] = [
     qualityOptions: ['Draft', 'Normal', 'Fine'],
     defaultPaperType: 'Plain Paper',
     paperTypes: ['Plain Paper', 'Heavy', 'Labels', 'Card Stock'],
-    duplexFlip: 'long',
+    duplexFlip: 'left-right',
     outputFaceUp: false,
     scaleCorrection: 1,
     notes: '',
@@ -270,7 +272,7 @@ export const BUILT_IN_PROFILES: PrinterProfile[] = [
     qualityOptions: ['Standard', 'High', 'Maximum'],
     defaultPaperType: 'Glossy Photo',
     paperTypes: ['Glossy Photo', 'Lustre', 'Matte Fine Art', 'Baryta'],
-    duplexFlip: 'long',
+    duplexFlip: 'left-right',
     outputFaceUp: true,
     scaleCorrection: 1,
     notes: 'Single-sided by design — duplex options are hidden for this profile.',
@@ -296,7 +298,7 @@ export const BUILT_IN_PROFILES: PrinterProfile[] = [
     qualityOptions: ['Draft', 'Normal'],
     defaultPaperType: 'Thermal',
     paperTypes: ['Thermal', 'Plain Paper'],
-    duplexFlip: 'short',
+    duplexFlip: 'top-bottom',
     outputFaceUp: true,
     scaleCorrection: 1,
     notes: 'Feed one sheet at a time; manual duplex needs careful re-alignment.',
@@ -443,6 +445,13 @@ function normalizeProfile(input: unknown): PrinterProfile | null {
       bottomMm: clampMm(raw.minMargins?.bottomMm, fallback.minMargins.bottomMm),
       leftMm: clampMm(raw.minMargins?.leftMm, fallback.minMargins.leftMm),
     },
+    // A stored profile from an older build may carry a driver edge name here;
+    // anything unrecognised falls back to "not tested yet" rather than being
+    // trusted, since guessing wrong wastes a whole duplex run.
+    duplexFlip:
+      raw.duplexFlip === 'left-right' || raw.duplexFlip === 'top-bottom'
+        ? raw.duplexFlip
+        : 'unknown',
     scaleCorrection:
       typeof raw.scaleCorrection === 'number' && raw.scaleCorrection > 0.8 && raw.scaleCorrection < 1.2
         ? raw.scaleCorrection

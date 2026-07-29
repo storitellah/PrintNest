@@ -277,7 +277,9 @@ export function markdownToBlocks(markdown: string): { text: string; heading: boo
         .replace(/`{1,3}([^`]*)`{1,3}/g, '$1')
         .replace(/\*\*([^*]+)\*\*/g, '$1')
         .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '$1')
-        .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1'),
+        // Link and image syntax collapses to its label. The URL portion
+        // allows one level of nested brackets, which real links use.
+        .replace(/!?\[([^\]]*)\]\((?:[^()]|\([^()]*\))*\)/g, '$1'),
       heading: false,
     });
   }
