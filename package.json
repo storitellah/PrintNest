@@ -1,0 +1,39 @@
+{
+  "name": "printnest",
+  "version": "1.0.0",
+  "private": false,
+  "description": "PrintNest by Storitellah — a local-first browser workspace for preparing and printing zines, books, photographs, artworks, posters and documents on a home printer.",
+  "license": "MIT",
+  "type": "module",
+  "homepage": "https://storitellah.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/storitellah/printnest.git"
+  },
+  "bugs": {
+    "url": "https://github.com/storitellah/printnest/issues",
+    "email": "hello@storitellah.com"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "audit": "npm audit --omit=dev"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^6.2.108"
+  },
+  "devDependencies": {
+    "jsdom": "^30.0.1",
+    "typescript": "^5.9.3",
+    "vite": "^8.1.5",
+    "vitest": "^4.1.10"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
