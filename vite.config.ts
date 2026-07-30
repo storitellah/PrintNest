@@ -36,9 +36,42 @@ function precacheManifest(): Plugin {
   };
 }
 
+/**
+ * Matches the `pn-unbuilt` block in `index.html`, including the leading
+ * indentation and the trailing newline, so removing it leaves no ragged gap.
+ */
+const UNBUILT_BLOCK = /[ \t]*<!--\s*pn-unbuilt\s*-->[\s\S]*?<!--\s*\/pn-unbuilt\s*-->[ \t]*\r?\n?/g;
+
+/**
+ * Removes the "this site was published without being built" notice.
+ *
+ * Exported for the test suite: the notice is only correct if it is present in
+ * the source file and absent from every build, which is worth asserting rather
+ * than trusting.
+ */
+export function stripUnbuiltNotice(html: string): string {
+  return html.replace(UNBUILT_BLOCK, '');
+}
+
+/**
+ * `index.html` carries a static notice explaining what has happened when the
+ * repository is served without being built. Vite removes it in both `dev` and
+ * `build`, so the only way it can reach a browser is the very situation it
+ * describes.
+ */
+function unbuiltNotice(): Plugin {
+  return {
+    name: 'printnest-strip-unbuilt-notice',
+    transformIndexHtml: {
+      order: 'pre',
+      handler: (html: string) => stripUnbuiltNotice(html),
+    },
+  };
+}
+
 export default defineConfig({
   base: './',
-  plugins: [precacheManifest()],
+  plugins: [unbuiltNotice(), precacheManifest()],
   build: {
     target: 'es2022',
     outDir: 'dist',

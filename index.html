@@ -50,6 +50,17 @@
     />
     <meta name="referrer" content="no-referrer" />
 
+    <!--
+      Watches for a start that never happens and explains why, instead of
+      leaving the loading state below on screen for ever.
+
+      Not deferred, and deliberately ahead of the bundle: its listeners have to
+      be registered before the browser begins fetching the application, or the
+      failure it exists to catch can happen before it is listening. It is
+      copied verbatim from `public/`, never bundled — see the file for why.
+    -->
+    <script src="./boot-watchdog.js"></script>
+
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="icon" href="./icons/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
@@ -107,6 +118,77 @@
   </head>
 
   <body>
+    <!--pn-unbuilt-->
+    <!--
+      Everything between the `pn-unbuilt` markers is removed by Vite, in both
+      `dev` and `build`. It therefore only ever reaches a browser when this
+      file is being served *verbatim* by a static host — which means the site
+      was published without being built.
+
+      That used to fail silently: the script tag at the end of this file points
+      at `/src/main.ts`, a host serves `.ts` as `video/mp2t`, the browser
+      refuses it as a module, and the loading state below stays on screen for
+      ever with no clue as to why. This notice is that clue. It needs no
+      JavaScript, because in that situation no JavaScript can run.
+    -->
+    <div
+      role="alert"
+      style="
+        position: fixed;
+        inset: 0;
+        z-index: 10;
+        overflow: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background: #f5f0e7;
+        color: #171717;
+        font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+      "
+    >
+      <div style="max-width: 44rem">
+        <p style="margin: 0 0 0.5rem; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: #8a8377">
+          PrintNest — deployment problem
+        </p>
+        <h1 style="margin: 0 0 1rem; font-family: 'Iowan Old Style', Palatino, Georgia, serif; font-size: 1.6rem">
+          This site was published without being built
+        </h1>
+        <p style="margin: 0 0 1rem">
+          What you are looking at is PrintNest's <em>source</em>
+          <code>index.html</code>. It asks the browser for
+          <code>/src/main.ts</code>, and a browser cannot run TypeScript — so
+          the application never starts. Nothing is wrong with the code.
+        </p>
+        <p style="margin: 0 0 0.75rem">
+          The fix is to publish the <code>dist</code> folder that
+          <code>npm run build</code> produces, rather than the repository root:
+        </p>
+        <table style="margin: 0 0 1.25rem; border-collapse: collapse; font-size: 0.95rem">
+          <tr>
+            <td style="padding: 0.35rem 1.25rem 0.35rem 0; color: #6b655b">Build command</td>
+            <td style="padding: 0.35rem 0"><code>npm run build</code></td>
+          </tr>
+          <tr>
+            <td style="padding: 0.35rem 1.25rem 0.35rem 0; color: #6b655b">Output directory</td>
+            <td style="padding: 0.35rem 0"><code>dist</code></td>
+          </tr>
+          <tr>
+            <td style="padding: 0.35rem 1.25rem 0.35rem 0; color: #6b655b">Node version</td>
+            <td style="padding: 0.35rem 0"><code>22</code> or newer</td>
+          </tr>
+        </table>
+        <p style="margin: 0; font-size: 0.95rem; color: #6b655b">
+          Full walkthrough in <code>documentation/cloudflare-pages.md</code>. If
+          you are not the person who deployed this,
+          <a href="mailto:hello@storitellah.com" style="color: #3d66f5">hello@storitellah.com</a>
+          will reach someone who can fix it.
+        </p>
+      </div>
+    </div>
+    <!--/pn-unbuilt-->
+
     <div id="app">
       <div class="pn-boot">
         <svg width="56" height="56" viewBox="0 0 32 32" role="img" aria-label="PrintNest">

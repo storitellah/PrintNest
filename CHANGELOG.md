@@ -5,6 +5,29 @@ All notable changes to PrintNest are recorded here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and PrintNest uses [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- **A site published without a build step now says so.** Serving the repository
+  rather than `dist/` left the browser asking for `/src/main.ts`, which static
+  hosts label `video/mp2t`; browsers refuse that as a module script, so the
+  loading state stayed on screen indefinitely with nothing to explain it. A
+  static notice in `index.html`, stripped by Vite in both `dev` and `build`,
+  now names the cause and the settings that fix it. The application code was
+  not at fault and is unchanged.
+
+### Added
+
+- **`public/boot-watchdog.js`** — reports a start that never happens, whatever
+  the cause: a missing or refused bundle, a policy that blocks it, a content
+  blocker. Names the file that failed, lists what to check and offers a reload.
+  Deliberately outside the bundle, so it survives the bundle failing.
+- Cloudflare Pages troubleshooting keyed to the symptom, a warning that
+  Cloudflare's "no framework" defaults publish the repository and still report
+  success, and a note on the cost of connecting one repository to two projects.
+- A `deploy` test suite holding that wiring in place.
+
 ## [1.0.0] — 2026-07-29
 
 The first release.

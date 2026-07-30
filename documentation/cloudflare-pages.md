@@ -24,8 +24,27 @@ reasoning behind the configuration files.
    the test suite's jsdom needs at least 22.
 5. **Save and Deploy.**
 
+> **The build command and output directory are not optional.** Cloudflare's
+> defaults for "Framework preset: None" are an *empty* build command and the
+> repository root as the output directory. Accept those and the deploy still
+> reports success — it simply publishes the source tree instead of the
+> application, and the site never starts. This has happened; see
+> [When the page shows only the PrintNest logo](#when-the-page-shows-only-the-printnest-logo).
+
 The first build takes a couple of minutes. Every push to the default branch
 deploys automatically; every pull request gets its own preview URL.
+
+## One project per site
+
+Connect the repository **once**. If two Pages projects point at it, every push
+runs two builds and produces two preview URLs, and after a merge there are two
+production deployments — whichever one carries the custom domain is the real
+site and the other quietly shadows it. If you find a spare, delete it under
+**Workers & Pages → the project → Settings → Delete project**.
+
+The project name matters in one place only: `wrangler pages deploy
+--project-name <name>` for a manual deploy. Nothing in the application
+hard-codes it.
 
 ## What `npm run build` does
 
@@ -97,11 +116,30 @@ page.
 Shown by the service worker when someone reaches PrintNest for the first time
 with no connection, before anything has been cached.
 
+### `boot-watchdog.js`
+
+The only JavaScript in `public/`, and it is there rather than in `src/` on
+purpose: files in `public/` are copied verbatim, never bundled. As a second
+Vite entry point the bundler merged it into the application chunk, which made
+it fail alongside the very thing it exists to report on.
+
+It watches for a start that never happens — a refused script, a missing chunk,
+a policy that blocks the bundle — and replaces the loading state with the
+reason and what to check. `index.html` loads it as a classic, non-deferred
+script ahead of the bundle, because its listeners have to be registered before
+the browser starts fetching the thing it is watching.
+
+Being outside the bundle, it does not appear in `precache.json`, so `src/sw.ts`
+lists it in `SHELL` by hand. The file that explains a failed start is the worst
+possible one to be missing offline.
+
 ## Verifying a deployment
 
 After the first deploy, check:
 
-1. **The app loads** and the home screen shows the project options.
+1. **The app loads** — the home screen shows the project options, not the logo
+   on its own. If it is just the logo, go to
+   [When the page shows only the PrintNest logo](#when-the-page-shows-only-the-printnest-logo).
 2. **Headers are applied** —
    `curl -sI https://your-project.pages.dev | grep -i content-security`
    should show the policy.
@@ -110,6 +148,62 @@ After the first deploy, check:
    reload. The application, templates and help pages should all still work.
 5. **It prints** — open a project, press Print, and confirm the browser's
    print preview shows your sheets at the right size and nothing else.
+
+## When the page shows only the PrintNest logo
+
+The logo, the name and the tagline on a plain background, for ever. That is the
+static loading state in `index.html`, and seeing it means the page was served
+but the application code never ran.
+
+**First, look at the page itself.** PrintNest now diagnoses this on its own, and
+which of the two messages you get tells you where to look:
+
+| What you see | What it means |
+| --- | --- |
+| "This site was published without being built" | The host is serving the repository, not `dist/`. Fix the build settings below. |
+| "PrintNest could not start", naming a file | The build is right but a file did not load. The named file and the browser console say why. |
+| Neither — just the logo | Older deploy, from before those messages existed. Work through the checks below. |
+
+**The build settings.** In **Workers & Pages → your project → Settings → Build**:
+
+| Setting | Must be |
+| --- | --- |
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+| `NODE_VERSION` | `22` or newer |
+
+Then **Deployments → Retry deployment**, or push a commit — changing the
+settings does not rebuild anything on its own.
+
+**Confirming it from the terminal**, which is quicker than clicking around:
+
+```bash
+# The published HTML must reference a hashed bundle, never a .ts file.
+curl -s https://your-project.pages.dev/ | grep -o 'src="[^"]*"'
+```
+
+`./assets/index-<hash>.js` is correct. `/src/main.ts` means the repository is
+being served: browsers refuse TypeScript as a module script — a static host
+labels `.ts` as `video/mp2t`, the MPEG transport stream — and the application
+never starts.
+
+```bash
+# The security headers only exist if public/ was published as the site root.
+curl -sI https://your-project.pages.dev/ | grep -i content-security-policy
+```
+
+No output is the same diagnosis: `public/_headers` is not at the deployment
+root, so the whole of `public/` went to the wrong place.
+
+**Other causes, once the build settings are right:**
+
+- **A stale service worker.** DevTools → Application → Service Workers →
+  *Unregister*, then reload. Bump `VERSION` in `src/sw.ts` to force this for
+  everyone on the next deploy.
+- **A blocked script.** The console names the directive. Compare the
+  `Content-Security-Policy` header against `public/_headers`; a proxy or a
+  host-level rule may be adding a stricter one of its own.
+- **A partial upload.** Retry the deployment.
 
 ## A custom domain
 

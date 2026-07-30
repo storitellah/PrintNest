@@ -165,6 +165,41 @@ user must confirm themselves, and the calibration page measures what the
 printer actually did. Interface copy that implied otherwise would produce
 wasted paper, so it is avoided deliberately.
 
+## Booting, and failing to boot
+
+`index.html` paints a static loading state — logo, name, tagline — and
+`main.ts` clears it with `root.replaceChildren()` as its first act. So "is
+`.pn-boot` still in the document?" is a reliable, dependency-free answer to
+"did the application start?", and two safety nets are built on it.
+
+This exists because of a real failure. The site was once published without a
+build step, so the host served the source `index.html`, whose script tag points
+at `/src/main.ts`. Static hosts label `.ts` as `video/mp2t` — MPEG transport
+stream — browsers refuse it as a module script, and the loading state stayed on
+screen for ever. The code was fine; nothing on the page said so.
+
+- **`public/boot-watchdog.js`** listens for resource errors from the capture
+  phase (they do not bubble), then checks after `window.load` plus a grace
+  period. Module scripts are deferred, so by `load` the bundle has either run
+  or failed — a far better signal than a bare timer racing the network. If the
+  loading state is still there it reports what failed and what to check.
+
+  It is in `public/` rather than `src/` deliberately: as a second Vite entry
+  point the bundler merged it into the application chunk, so it failed
+  alongside the thing it was meant to report on. `public/` is copied verbatim.
+  That is also why it is plain JavaScript and imports nothing, and why
+  `src/sw.ts` lists it in `SHELL` by hand — outside the bundle, it never
+  reaches `precache.json`.
+
+- **The `pn-unbuilt` block** in `index.html` covers the case above, where no
+  JavaScript can run at all. Vite strips it in both `dev` and `build`, so the
+  only way it reaches a browser is when the raw repository is being served —
+  exactly the situation it describes. It needs no scripts and no stylesheet.
+
+The `deploy` suite holds the wiring in place: the notice present in source and
+absent from every build, the watchdog ahead of the bundle, non-deferred,
+import-free and pre-cached.
+
 ## Storage
 
 IndexedDB, three stores: `projects` (JSON documents), `assets` (blobs, indexed
@@ -218,7 +253,7 @@ That is a judgement about this application, not a general position.
 
 ## Testing
 
-292 tests across seven suites, organised by subject rather than by file:
+307 tests across eight suites, organised by subject rather than by file:
 
 | Suite | Covers |
 | --- | --- |
@@ -229,6 +264,7 @@ That is a judgement about this application, not a general position.
 | `project` | project kinds, templates, the checker, poster, contact sheets, ink, calibration, duplex |
 | `render` | DOM output at true millimetre size, text wrapping, crop marks |
 | `storage` | IndexedDB round-trips, the store and undo, `.printnest` files, PDF dimensions |
+| `deploy` | the shell contract: the unbuilt-deploy notice and the boot watchdog |
 
 The imposition tests are the ones to be careful with. They encode the page
 orders that make a folded booklet read correctly; changing them to make a test

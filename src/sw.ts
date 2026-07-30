@@ -26,7 +26,16 @@ const CACHE = `printnest-${VERSION}`;
  * does not need the list compiled into it — which would mean the worker's own
  * hash changed on every deploy for no reason.
  */
-const SHELL = ['./', './index.html', './manifest.webmanifest', './offline.html'];
+const SHELL = [
+  './',
+  './index.html',
+  './manifest.webmanifest',
+  './offline.html',
+  // Listed by hand because it is copied from `public/` rather than bundled, so
+  // it never appears in `precache.json`. It is the file that explains a failed
+  // start, which makes it the worst possible thing to be missing offline.
+  './boot-watchdog.js',
+];
 
 async function precacheList(): Promise<string[]> {
   try {

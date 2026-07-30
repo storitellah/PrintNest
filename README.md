@@ -62,7 +62,7 @@ npm install
 npm run dev        # development server on http://localhost:5173
 npm run build      # production build into dist/
 npm run preview    # serve the production build on http://localhost:4173
-npm run test       # 292 unit tests
+npm run test       # 307 unit tests
 ```
 
 Other scripts:
@@ -101,7 +101,7 @@ src/ui/        screens, panels, dialogs, editor interactions
 templates/     nineteen editable JSON layout definitions
 printer-profiles/  starter printer descriptions
 documentation/ deployment, architecture, printing notes, the user guide
-tests/         292 unit tests across seven suites
+tests/         307 unit tests across eight suites
 ```
 
 Two dependencies, both lazily loaded and only for PDF work:
