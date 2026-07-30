@@ -1,0 +1,144 @@
+/*
+ * Print styles.
+ *
+ * The contract: when the print dialog opens, the only thing in the printed
+ * document is `#pn-print-root` — the imposed sheets, at their exact physical
+ * size. Everything else in the application is removed from the print box, not
+ * merely hidden off-screen, so it cannot leave blank pages behind.
+ *
+ * The `@page` size rule itself is written at print time by `printRoot.ts`,
+ * because it depends on the project's paper.
+ *
+ * Browser notes:
+ *  - Chrome, Edge and Safari honour `@page { size: … }` and will preselect the
+ *    matching paper. Firefox applies the dimensions but still shows its own
+ *    paper menu, so the print screen restates the paper size in words.
+ *  - Every browser lets the user override scale. "Default"/"100 %" is required
+ *    for true-size output; "Fit to page" will silently shrink everything by a
+ *    few per cent, which is exactly what the calibration page detects.
+ *  - Background graphics must be enabled for page background colours and solid
+ *    fills to print. Chrome respects `print-color-adjust: exact`; Firefox and
+ *    Safari need the user's "Print backgrounds" checkbox.
+ */
+
+#pn-print-root {
+  display: none;
+}
+
+/*
+ * Dark mode must never reach the paper. The print root forces a light
+ * rendering context regardless of the interface theme.
+ */
+#pn-print-root,
+#pn-print-root * {
+  color-scheme: light;
+}
+
+@media print {
+  /* Remove the entire application from the printed flow. */
+  body > *:not(#pn-print-root) {
+    display: none !important;
+  }
+
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  #pn-print-root {
+    display: block !important;
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+  }
+
+  /* One sheet element per physical page. */
+  .pn-print-sheet {
+    display: block;
+    margin: 0;
+    padding: 0;
+    /* `break-after` is the modern property; the legacy alias keeps older
+       WebKit and Firefox in line. */
+    break-after: page;
+    page-break-after: always;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    overflow: hidden;
+  }
+
+  /* A trailing blank page is the most common print bug — this prevents it. */
+  .pn-print-sheet:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .pn-sheet,
+  .pn-page {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+    overflow: hidden;
+  }
+
+  /* Never split an element across a page boundary. */
+  .pn-el,
+  .pn-slot,
+  .pn-poster-window,
+  .pn-map__cell {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /*
+   * Print the colours that were designed, not the browser's economised
+   * approximation. Chrome and Edge honour this outright; Firefox and Safari
+   * additionally require the user to tick "Print backgrounds".
+   */
+  #pn-print-root,
+  #pn-print-root * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Preview-only furniture must not print, even inside the print root. */
+  .pn-page__overlay,
+  .pn-stage__label,
+  .pn-selection-box,
+  .pn-handle,
+  .pn-slot--blank {
+    display: none !important;
+  }
+
+  /* Images at full quality; the browser must not substitute a low-res copy. */
+  #pn-print-root img {
+    image-rendering: auto;
+    max-width: none;
+  }
+
+  /* Links print as plain text — a printed URL in a zine is just noise. */
+  #pn-print-root a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Scale correction learned from the calibration page. */
+  .pn-print-root--corrected .pn-sheet {
+    transform: scale(var(--pn-print-scale, 1));
+    transform-origin: top left;
+  }
+}
+
+/*
+ * While the print document is being built, the on-screen application is left
+ * alone — the print root is `display: none` outside `@media print`, so nothing
+ * flashes. This class only exists so that other components can pause
+ * animations and expensive work during a print.
+ */
+.pn-printing .pn-canvas__scroll {
+  pointer-events: none;
+}

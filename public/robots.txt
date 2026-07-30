@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# PrintNest has no server-side content to crawl beyond the application shell.

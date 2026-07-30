@@ -1,0 +1,157 @@
+[
+  {
+    "id": "artist-portfolio",
+    "name": "Artist portfolio",
+    "description": "One work per A4 page with a wide gallery margin and a caption line.",
+    "category": "Photography and art",
+    "kind": "portfolio",
+    "paperId": "a4",
+    "orientation": "portrait",
+    "marginsMm": 20,
+    "pageSize": "sheet",
+    "pageCount": 4,
+    "settings": {
+      "marks": { "safeAreaMm": 15 }
+    },
+    "pages": [
+      {
+        "elements": [
+          { "type": "text", "rect": [20, 100, 170, 40], "text": "Portfolio", "font": "serif", "sizePt": 34, "align": "center" },
+          { "type": "text", "rect": [20, 146, 170, 12], "text": "Your name", "font": "sans", "sizePt": 10, "align": "center", "color": "#6B6B6B", "letterSpacing": 0.12, "uppercase": true }
+        ]
+      },
+      {
+        "elements": [
+          { "type": "image", "rect": [20, 20, 170, 200], "fit": "fit" },
+          { "type": "shape", "shape": "line", "rect": [20, 232, 40, 0.4], "stroke": "#171717", "strokeMm": 0.25 },
+          { "type": "text", "rect": [20, 238, 170, 10], "text": "Title of the work", "font": "serif", "sizePt": 11, "italic": true },
+          { "type": "text", "rect": [20, 250, 170, 20], "text": "Medium, year · 000 × 000 mm", "font": "sans", "sizePt": 8, "color": "#6B6B6B", "lineHeight": 1.5 }
+        ]
+      },
+      { "repeatOf": 1, "count": 2 }
+    ]
+  },
+  {
+    "id": "exhibition-handout",
+    "name": "Exhibition handout",
+    "description": "A4 folded to A5: a title panel, a map panel and a works list.",
+    "category": "Photography and art",
+    "kind": "zine",
+    "paperId": "a4",
+    "orientation": "landscape",
+    "marginsMm": 0,
+    "pageSize": "half",
+    "pageCount": 4,
+    "settings": {
+      "imposition": { "binding": "saddle-stitch", "duplex": "manual-duplex", "gutterMm": 5 }
+    },
+    "pages": [
+      {
+        "role": "cover",
+        "elements": [
+          { "type": "text", "rect": [16, 50, 116, 40], "text": "Exhibition title", "font": "serif", "sizePt": 24, "lineHeight": 1.15 },
+          { "type": "shape", "shape": "line", "rect": [16, 98, 50, 1], "stroke": "#F4A340", "strokeMm": 1 },
+          { "type": "text", "rect": [16, 110, 116, 30], "text": "Venue\nDates · Opening times", "font": "sans", "sizePt": 9, "lineHeight": 1.6, "color": "#6B6B6B" }
+        ]
+      },
+      { "elements": [{ "type": "text", "rect": [16, 20, 116, 170], "text": "About the work\n\nA few paragraphs for the visitor.", "font": "serif", "sizePt": 9.5, "lineHeight": 1.65 }] },
+      { "elements": [{ "type": "text", "rect": [16, 20, 116, 170], "text": "List of works\n\n1. \n2. \n3. \n4. ", "font": "sans", "sizePt": 8.5, "lineHeight": 1.9 }] },
+      { "role": "back-cover", "elements": [{ "type": "image", "rect": [0, 0, 148.5, 210], "fit": "fill" }] }
+    ]
+  },
+  {
+    "id": "photo-contact-sheet",
+    "name": "Photo contact sheet",
+    "description": "A4 proof sheet, four across by five down, with file names.",
+    "category": "Photography and art",
+    "kind": "contact-sheet",
+    "paperId": "a4",
+    "orientation": "portrait",
+    "marginsMm": 12,
+    "pageSize": "sheet",
+    "pageCount": 1,
+    "settings": {
+      "contactSheet": {
+        "columns": 4,
+        "rows": 5,
+        "gapMm": 4,
+        "showFileNames": true,
+        "showNumbers": true,
+        "showPageNumbers": true,
+        "captionSizePt": 6,
+        "fit": "fit"
+      }
+    },
+    "pages": [
+      {
+        "elements": [
+          { "type": "text", "rect": [12, 12, 186, 10], "text": "Contact sheet", "font": "serif", "sizePt": 13 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "artwork-certificate",
+    "name": "Artwork certificate",
+    "description": "A5 certificate of authenticity with a signature line.",
+    "category": "Photography and art",
+    "kind": "artwork",
+    "paperId": "a5",
+    "orientation": "portrait",
+    "marginsMm": 16,
+    "pageSize": "sheet",
+    "pageCount": 1,
+    "settings": {
+      "marks": { "safeAreaMm": 12 }
+    },
+    "pages": [
+      {
+        "elements": [
+          { "type": "shape", "shape": "rect", "rect": [10, 10, 128, 190], "fill": null, "stroke": "#D9D5CE", "strokeMm": 0.5 },
+          { "type": "text", "rect": [20, 28, 108, 16], "text": "Certificate of authenticity", "font": "sans", "sizePt": 8, "align": "center", "uppercase": true, "letterSpacing": 0.16, "color": "#6B6B6B" },
+          { "type": "text", "rect": [20, 52, 108, 24], "text": "Title of the work", "font": "serif", "sizePt": 17, "align": "center", "italic": true },
+          { "type": "text", "rect": [20, 82, 108, 34], "text": "Artist\nMedium, year\nEdition 1 of 1", "font": "serif", "sizePt": 10, "align": "center", "lineHeight": 1.7 },
+          { "type": "shape", "shape": "line", "rect": [34, 150, 80, 0.4], "stroke": "#171717", "strokeMm": 0.3 },
+          { "type": "text", "rect": [20, 154, 108, 10], "text": "Signature", "font": "sans", "sizePt": 7, "align": "center", "color": "#8C877D" },
+          { "type": "shape", "shape": "line", "rect": [34, 176, 80, 0.4], "stroke": "#171717", "strokeMm": 0.3 },
+          { "type": "text", "rect": [20, 180, 108, 10], "text": "Date", "font": "sans", "sizePt": 7, "align": "center", "color": "#8C877D" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "print-edition-sheet",
+    "name": "Print edition sheet",
+    "description": "A4 record sheet listing every print in an edition.",
+    "category": "Photography and art",
+    "kind": "artwork",
+    "paperId": "a4",
+    "orientation": "portrait",
+    "marginsMm": 16,
+    "pageSize": "sheet",
+    "pageCount": 1,
+    "settings": {},
+    "pages": [
+      {
+        "elements": [
+          { "type": "text", "rect": [16, 16, 178, 14], "text": "Edition record", "font": "serif", "sizePt": 20 },
+          { "type": "shape", "shape": "line", "rect": [16, 34, 178, 1], "stroke": "#171717", "strokeMm": 0.4 },
+          { "type": "text", "rect": [16, 40, 178, 30], "text": "Work: \nPaper: \nInk: \nPrinter: ", "font": "sans", "sizePt": 9, "lineHeight": 1.8 },
+          { "type": "text", "rect": [16, 92, 30, 8], "text": "No.", "font": "sans", "sizePt": 8, "uppercase": true, "color": "#6B6B6B", "letterSpacing": 0.08 },
+          { "type": "text", "rect": [50, 92, 60, 8], "text": "Date", "font": "sans", "sizePt": 8, "uppercase": true, "color": "#6B6B6B", "letterSpacing": 0.08 },
+          { "type": "text", "rect": [114, 92, 80, 8], "text": "Notes", "font": "sans", "sizePt": 8, "uppercase": true, "color": "#6B6B6B", "letterSpacing": 0.08 },
+          { "type": "shape", "shape": "line", "rect": [16, 104, 178, 0.4], "stroke": "#D9D5CE", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [16, 118, 178, 0.4], "stroke": "#D9D5CE", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [16, 132, 178, 0.4], "stroke": "#D9D5CE", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [16, 146, 178, 0.4], "stroke": "#D9D5CE", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [16, 160, 178, 0.4], "stroke": "#D9D5CE", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [16, 174, 178, 0.4], "stroke": "#D9D5CE", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [16, 188, 178, 0.4], "stroke": "#D9D5CE", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [16, 202, 178, 0.4], "stroke": "#D9D5CE", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [16, 216, 178, 0.4], "stroke": "#D9D5CE", "strokeMm": 0.25 },
+          { "type": "shape", "shape": "line", "rect": [16, 230, 178, 0.4], "stroke": "#D9D5CE", "strokeMm": 0.25 }
+        ]
+      }
+    ]
+  }
+]

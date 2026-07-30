@@ -1,0 +1,34 @@
+{
+  "name": "PrintNest by Storitellah",
+  "short_name": "PrintNest",
+  "description": "Prepare and print zines, books, photographs, artworks, posters, cards and labels on your home printer. Everything happens on your device.",
+  "id": "/printnest/",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
+  "orientation": "any",
+  "background_color": "#F5F0E7",
+  "theme_color": "#F5F0E7",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["productivity", "graphics", "photo", "utilities"],
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "./icons/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "New zine", "short_name": "Zine", "url": "./?new=zine", "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Quick print", "short_name": "Quick", "url": "./?new=quick", "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Photo print", "short_name": "Photo", "url": "./?new=photo", "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }] }
+  ],
+  "file_handlers": [
+    {
+      "action": "./",
+      "accept": { "application/json": [".printnest"] }
+    }
+  ],
+  "prefer_related_applications": false
+}

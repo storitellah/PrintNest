@@ -1,0 +1,24 @@
+name: Idea or feature request
+description: Something PrintNest should be able to do
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to make?
+      description: Describe the printed thing you want, rather than the feature. It often turns out there is already a way.
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What you think would help
+    validations:
+      required: true
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: How you do it at the moment
+      description: Including "I do it by hand" or "I use another program" — both are useful to know.

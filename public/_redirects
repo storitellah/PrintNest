@@ -1,0 +1,9 @@
+# Single-page fallback for Cloudflare Pages.
+#
+# PrintNest keeps all of its state in memory and IndexedDB rather than in the
+# URL, so there are no client-side routes to preserve — but a stray or shared
+# deep link should still open the application rather than a 404.
+#
+# The 200 status rewrites rather than redirects, so the address bar is left
+# alone. Real missing assets still 404 because they are matched first.
+/*    /index.html   200

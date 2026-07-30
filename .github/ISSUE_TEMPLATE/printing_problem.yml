@@ -1,0 +1,95 @@
+name: Printing problem
+description: Something came out of the printer wrong
+labels: ["bug", "printing"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Printing problems are hard to reproduce without detail, because so much
+        depends on the driver. The most useful thing you can tell us is what
+        the **Print sheets** preview showed versus what actually printed.
+
+        Before filing: if everything printed slightly too small, that is almost
+        always "fit to page" in the print dialog. Turn it off and run the
+        calibration page under Printer setup.
+
+  - type: textarea
+    id: what-printed
+    attributes:
+      label: What came out of the printer
+    validations:
+      required: true
+
+  - type: textarea
+    id: preview
+    attributes:
+      label: What the Print sheets preview showed
+      description: Switch the preview to "Print sheets" before printing and compare.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What were you making?
+      options:
+        - Quick Print
+        - Photo Print
+        - Artwork Print
+        - Zine Maker
+        - Booklet Maker
+        - Book Printer
+        - Poster Printer
+        - Contact Sheet
+        - Photo Grid
+        - Cards and Invitations
+        - Labels and Stickers
+        - Portfolio Print
+        - Custom Layout
+    validations:
+      required: true
+
+  - type: input
+    id: printer
+    attributes:
+      label: Printer brand and exact model
+      placeholder: Brother DCP-T420W
+    validations:
+      required: true
+
+  - type: dropdown
+    id: connection
+    attributes:
+      label: How is it connected?
+      options:
+        - Wi-Fi
+        - USB
+        - Local network
+        - AirPrint
+        - Mopria
+        - Bluetooth
+        - Not sure
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser, version and operating system
+      placeholder: Safari 18 on macOS 15
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: settings
+    attributes:
+      label: Print dialog settings you used
+      options:
+        - label: Scale was 100 % or "Default" (not "Fit to page")
+        - label: Margins were set to None
+        - label: Background graphics were on
+        - label: I did NOT tick "two-sided" in the driver while using manual duplex
+
+  - type: textarea
+    id: calibration
+    attributes:
+      label: Calibration result
+      description: If you ran the calibration page, what did the 100 mm line measure?
