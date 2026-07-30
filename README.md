@@ -87,6 +87,13 @@ Security headers, cache rules, the SPA fallback and the custom 404 are all in
 `public/`, which Cloudflare copies verbatim into the deployment. Full
 walkthrough: [`documentation/cloudflare-pages.md`](documentation/cloudflare-pages.md).
 
+None of those three settings is optional. Cloudflare's "no framework" defaults
+publish the repository rather than the application, and still report the deploy
+as successful — so if a deployed site shows nothing but the PrintNest logo,
+that is almost always why. PrintNest now says so on the page itself; the
+reasoning and the checks are under
+[When the page shows only the PrintNest logo](documentation/cloudflare-pages.md#when-the-page-shows-only-the-printnest-logo).
+
 ## How it is built
 
 A static, client-side application: Vite, TypeScript and the DOM. No UI

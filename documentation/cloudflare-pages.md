@@ -219,8 +219,12 @@ Without the Git integration:
 
 ```bash
 npm run build
-npx wrangler pages deploy dist --project-name printnest
+npx wrangler pages deploy dist --project-name <your-project-name>
 ```
+
+`dist`, never `.` — deploying the repository root is the mistake this whole
+document keeps warning about. The project name is whatever the dashboard calls
+it; `wrangler pages project list` will tell you.
 
 ## Hosting it somewhere else
 
